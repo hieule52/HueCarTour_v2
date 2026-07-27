@@ -44,7 +44,7 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
 
   return (
     <Card className="flex flex-col h-full bg-bg-surface hover:shadow-custom-md">
-      <Link href={`/tour/${tour.slug}`} className="flex flex-col h-full group">
+      <Link href={`/dich-vu-xe-du-lich/${tour.slug}`} className="flex flex-col h-full group">
         {/* Khu vực hình ảnh */}
         <div className="relative w-full aspect-[4/3] bg-bg-surface-muted overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 text-text-secondary/50 text-xs text-center p-4">

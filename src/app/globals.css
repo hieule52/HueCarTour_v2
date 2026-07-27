@@ -2,93 +2,110 @@
 
 /* ============================================================
    DESIGN TOKENS & SYSTEM VARIABLES (3-LAYER ARCHITECTURE)
+   Thương hiệu chính: TIẾN QUỐC AUTO SPA (dark premium)
+   Thương hiệu phụ:   HUECARTOUR (.theme-huecartour override)
    ============================================================ */
 
 :root {
-  /* --- 1. Primitive Tokens (HueCarTour) --- */
-  --primitive-navy: #172236;
-  --primitive-yellow: #E8B923;
-  --primitive-kem: #F7F6F1;
-  --primitive-kem-darker: #EFECE1;
-  --primitive-dark: #101828;
-  --primitive-gray-muted: #667085;
-  --primitive-gray-light: #F2F4F7;
-  --primitive-white: #FFFFFF;
-  --primitive-success: #12B76A;
-  --primitive-error: #F04438;
+  /* --- 1. Primitive Tokens — Auto Spa (Dark Premium Blue) --- */
+  --primitive-spa-bg:           #050A12;
+  --primitive-spa-surface:      #07111F;
+  --primitive-spa-surface-2:    #0E1726;
+  --primitive-spa-surface-3:    #17243A;
+  --primitive-spa-blue:         #168BFF;
+  --primitive-spa-blue-hover:   #40A0FF;
+  --primitive-spa-cyan:         #00C8FF;
+  --primitive-spa-cyan-hover:   #33D3FF;
+  --primitive-spa-silver:       #EAF2FF;
+  --primitive-spa-gray:         #94A3B8;
+  --primitive-spa-border:       #1E293B;
+  --primitive-spa-border-focus: #168BFF;
 
-  /* --- 2. Semantic Tokens (Default: HueCarTour Light/Premium Theme) --- */
-  --color-primary: var(--primitive-navy);
-  --color-primary-hover: #23324f;
-  --color-secondary: var(--primitive-yellow);
-  --color-secondary-hover: #d1a51b;
-  
-  --bg-app: var(--primitive-kem);
-  --bg-surface: var(--primitive-white);
-  --bg-surface-muted: var(--primitive-kem-darker);
-  
-  --text-primary: var(--primitive-dark);
-  --text-secondary: var(--primitive-gray-muted);
-  --text-on-primary: var(--primitive-white);
-  --text-on-secondary: var(--primitive-dark);
-  
-  --border-color: #E4E7EC;
-  --border-focus: var(--primitive-navy);
-  
+  /* Shared primitives */
+  --primitive-white:   #FFFFFF;
+  --primitive-success: #12B76A;
+  --primitive-error:   #F04438;
+  --primitive-warning: #F79009;
+
+  /* --- 2. Semantic Tokens (Default: Auto Spa Dark Theme) --- */
+  --color-primary:        var(--primitive-spa-blue);
+  --color-primary-hover:  var(--primitive-spa-blue-hover);
+  --color-secondary:      var(--primitive-spa-cyan);
+  --color-secondary-hover: var(--primitive-spa-cyan-hover);
+
+  --bg-app:              var(--primitive-spa-bg);
+  --bg-surface:          var(--primitive-spa-surface);
+  --bg-surface-2:        var(--primitive-spa-surface-2);
+  --bg-surface-muted:    var(--primitive-spa-surface-3);
+
+  --text-primary:        var(--primitive-spa-silver);
+  --text-secondary:      var(--primitive-spa-gray);
+  --text-on-primary:     var(--primitive-spa-bg);
+  --text-on-secondary:   var(--primitive-spa-bg);
+
+  --border-color:        var(--primitive-spa-border);
+  --border-focus:        var(--primitive-spa-border-focus);
+
   --state-success: var(--primitive-success);
-  --state-error: var(--primitive-error);
+  --state-error:   var(--primitive-error);
+  --state-warning: var(--primitive-warning);
 
   /* --- 3. Component & Layout Tokens --- */
-  --header-height: 72px;
+  --header-height:             72px;
   --mobile-contact-bar-height: 60px;
-  
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-full: 9999px;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(16, 24, 40, 0.1), 0 4px 6px -4px rgba(16, 24, 40, 0.05);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 
-  --z-header: 50;
-  --z-drawer: 100;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  --shadow-sm:    0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md:    0 4px 12px 0 rgba(0, 200, 255, 0.12);
+  --shadow-lg:    0 8px 24px 0 rgba(22, 139, 255, 0.18);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+
+  --z-header:   50;
+  --z-drawer:   100;
   --z-floating: 40;
 }
 
-/* --- Auto Spa Theme Override Class --- */
-.theme-autospa {
-  /* --- 1. Primitive Tokens (Auto Spa) --- */
-  --primitive-spa-dark-navy: #07111F;
-  --primitive-spa-bg: #050A12;
-  --primitive-spa-blue: #168BFF;
-  --primitive-spa-cyan: #00C8FF;
-  --primitive-spa-silver: #EAF2FF;
-  --primitive-spa-gray-muted: #94A3B8;
-  --primitive-spa-surface: #0E1726;
-  --primitive-spa-surface-hover: #17243A;
+/* ============================================================
+   HUECARTOUR THEME — override cho trang xe du lịch
+   Áp dụng khi route /dich-vu-xe-du-lich
+   ============================================================ */
+.theme-huecartour {
+  /* --- 1. Primitive Tokens (HueCarTour Light Premium) --- */
+  --primitive-hct-navy:         #172236;
+  --primitive-hct-navy-hover:   #23324f;
+  --primitive-hct-yellow:       #E8B923;
+  --primitive-hct-yellow-hover: #D1A51B;
+  --primitive-hct-kem:          #F7F6F1;
+  --primitive-hct-kem-darker:   #EFECE1;
+  --primitive-hct-dark:         #101828;
+  --primitive-hct-gray:         #667085;
+  --primitive-hct-border:       #E4E7EC;
 
   /* --- 2. Semantic Tokens Override --- */
-  --color-primary: var(--primitive-spa-blue);
-  --color-primary-hover: #40a0ff;
-  --color-secondary: var(--primitive-spa-cyan);
-  --color-secondary-hover: #33d3ff;
-  
-  --bg-app: var(--primitive-spa-bg);
-  --bg-surface: var(--primitive-spa-surface);
-  --bg-surface-muted: #0A1220;
-  
-  --text-primary: var(--primitive-spa-silver);
-  --text-secondary: var(--primitive-spa-gray-muted);
-  --text-on-primary: #050A12;
-  --text-on-secondary: #050A12;
-  
-  --border-color: #1E293B;
-  --border-focus: var(--primitive-spa-blue);
+  --color-primary:        var(--primitive-hct-navy);
+  --color-primary-hover:  var(--primitive-hct-navy-hover);
+  --color-secondary:      var(--primitive-hct-yellow);
+  --color-secondary-hover: var(--primitive-hct-yellow-hover);
 
-  --shadow-md: 0 4px 12px 0 rgba(0, 200, 255, 0.15);
-  --shadow-lg: 0 8px 24px 0 rgba(22, 139, 255, 0.2);
+  --bg-app:           var(--primitive-hct-kem);
+  --bg-surface:       var(--primitive-white);
+  --bg-surface-2:     var(--primitive-white);
+  --bg-surface-muted: var(--primitive-hct-kem-darker);
+
+  --text-primary:     var(--primitive-hct-dark);
+  --text-secondary:   var(--primitive-hct-gray);
+  --text-on-primary:  var(--primitive-white);
+  --text-on-secondary: var(--primitive-hct-dark);
+
+  --border-color: var(--primitive-hct-border);
+  --border-focus: var(--primitive-hct-navy);
+
+  --shadow-md: 0 4px 6px -1px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(16, 24, 40, 0.1), 0 4px 6px -4px rgba(16, 24, 40, 0.05);
 }
 
 /* ============================================================
@@ -96,33 +113,36 @@
    ============================================================ */
 
 @theme {
-  --color-primary: var(--color-primary);
-  --color-primary-hover: var(--color-primary-hover);
-  --color-secondary: var(--color-secondary);
-  --color-secondary-hover: var(--color-secondary-hover);
-  
-  --color-bg-app: var(--bg-app);
-  --color-bg-surface: var(--bg-surface);
-  --color-bg-surface-muted: var(--bg-surface-muted);
-  
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-on-primary: var(--text-on-primary);
+  --color-primary:           var(--color-primary);
+  --color-primary-hover:     var(--color-primary-hover);
+  --color-secondary:         var(--color-secondary);
+  --color-secondary-hover:   var(--color-secondary-hover);
+
+  --color-bg-app:            var(--bg-app);
+  --color-bg-surface:        var(--bg-surface);
+  --color-bg-surface-2:      var(--bg-surface-2);
+  --color-bg-surface-muted:  var(--bg-surface-muted);
+
+  --color-text-primary:      var(--text-primary);
+  --color-text-secondary:    var(--text-secondary);
+  --color-text-on-primary:   var(--text-on-primary);
   --color-text-on-secondary: var(--text-on-secondary);
-  
-  --color-border-custom: var(--border-color);
-  --color-border-focus: var(--border-focus);
-  
-  --color-state-success: var(--state-success);
-  --color-state-error: var(--state-error);
 
-  --radius-custom-sm: var(--radius-sm);
-  --radius-custom-md: var(--radius-md);
-  --radius-custom-lg: var(--radius-lg);
+  --color-border-custom:     var(--border-color);
+  --color-border-focus:      var(--border-focus);
 
-  --shadow-custom-sm: var(--shadow-sm);
-  --shadow-custom-md: var(--shadow-md);
-  --shadow-custom-lg: var(--shadow-lg);
+  --color-state-success:     var(--state-success);
+  --color-state-error:       var(--state-error);
+  --color-state-warning:     var(--state-warning);
+
+  --radius-custom-sm:   var(--radius-sm);
+  --radius-custom-md:   var(--radius-md);
+  --radius-custom-lg:   var(--radius-lg);
+  --radius-custom-full: var(--radius-full);
+
+  --shadow-custom-sm:    var(--shadow-sm);
+  --shadow-custom-md:    var(--shadow-md);
+  --shadow-custom-lg:    var(--shadow-lg);
   --shadow-custom-inner: var(--shadow-inner);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -156,20 +176,36 @@ body {
   background: var(--color-primary);
 }
 
-/* Focus outline styled cleanly */
+/* Focus outline */
 *:focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
-/* Map frame clean shadow */
+/* Map iframe */
 iframe {
   border: 0;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
 }
 
-/* Safe area content padding helper */
+/* Safe area content padding (mobile contact bar) */
 .pb-safe {
   padding-bottom: calc(var(--mobile-contact-bar-height) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Gradient text helper */
+.text-gradient-blue {
+  background: linear-gradient(135deg, var(--primitive-spa-blue) 0%, var(--primitive-spa-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effect for CTA buttons */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(22, 139, 255, 0.4);
+}
+.glow-primary:hover {
+  box-shadow: 0 0 28px rgba(22, 139, 255, 0.6);
 }
