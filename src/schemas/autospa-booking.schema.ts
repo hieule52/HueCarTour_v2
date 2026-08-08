@@ -39,11 +39,11 @@ export const autoSpaBookingSchema = z.object({
   carCondition: z
     .string()
     .min(5, "Vui lòng nhập ngắn gọn tình trạng xe hiện tại hoặc yêu cầu")
-    .max(200, "Tình trạng tối đa 200 ký tự")
+    .max(1000, "Tình trạng tối đa 1000 ký tự")
     .transform((val) => val.trim()),
-  note: z.string().max(500, "Ghi chú tối đa 500 ký tự").optional(),
-  // Honeypot chống spam bot
-  email: z.string().max(50, "Spam detected").optional(),
+  note: z.string().max(1000, "Ghi chú tối đa 1000 ký tự").optional(),
+  // Honeypot chống spam bot (đổi tên để tránh Chrome Autofill tự điền email)
+  website_url: z.string().max(50, "Spam detected").optional(),
 });
 
 export type AutoSpaBookingFormData = z.infer<typeof autoSpaBookingSchema>;

@@ -1,6 +1,7 @@
 // ============================================================
 // src/components/common/SectionHeading.tsx
 // Tiêu đề phân đoạn chuẩn hóa theo style guidelines
+// Đảm bảo tương phản cao (High Contrast) trên cả nền sáng và nền tối
 // ============================================================
 
 import React from "react";
@@ -11,6 +12,7 @@ interface SectionHeadingProps extends React.HTMLAttributes<HTMLDivElement> {
   eyebrow?: string;
   description?: string;
   align?: "left" | "center";
+  darkTheme?: boolean;
 }
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
@@ -18,6 +20,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   eyebrow,
   description,
   align = "center",
+  darkTheme = true,
   className,
   ...props
 }) => {
@@ -31,15 +34,30 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       {...props}
     >
       {eyebrow && (
-        <span className="text-xs md:text-sm font-semibold tracking-widest text-primary uppercase">
+        <span
+          className={cn(
+            "text-xs md:text-sm font-bold tracking-widest uppercase",
+            darkTheme ? "text-[#38BDF8]" : "text-[#1E293B]"
+          )}
+        >
           {eyebrow}
         </span>
       )}
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-text-primary">
+      <h2
+        className={cn(
+          "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight",
+          darkTheme ? "text-[#F8FAFC]" : "text-[#0F172A]"
+        )}
+      >
         {title}
       </h2>
       {description && (
-        <p className="max-w-2xl text-sm sm:text-base md:text-lg text-text-secondary leading-relaxed">
+        <p
+          className={cn(
+            "max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed font-normal",
+            darkTheme ? "text-[#CBD5E1]" : "text-[#475569]"
+          )}
+        >
           {description}
         </p>
       )}

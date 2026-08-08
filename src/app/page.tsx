@@ -2,6 +2,7 @@
 // src/app/page.tsx
 // Trang chủ TIẾN QUỐC AUTO SPA — Server Component
 // SEO: LocalBusiness + AutoRepair + FAQPage
+// High Contrast Dark Theme — Đảm bảo chữ trắng/slate sáng rõ nét 100%
 // ============================================================
 
 import type { Metadata } from "next";
@@ -170,7 +171,7 @@ export default function HomePage() {
       {/* JSON-LD */}
       <JsonLd data={jsonLdData} />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col bg-[#050A12] text-[#F8FAFC]">
 
         {/* ============================================================
             1. HERO — Tiến Quốc Auto Spa
@@ -196,15 +197,15 @@ export default function HomePage() {
           <Container className="relative z-10 py-20 sm:py-28 md:py-36">
             <div className="max-w-3xl flex flex-col gap-6">
               {/* Eyebrow */}
-              <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest text-[#00C8FF] uppercase bg-[#168BFF]/10 border border-[#168BFF]/20 px-4 py-2 rounded-custom-full w-fit">
-                <span className="w-2 h-2 rounded-full bg-[#00C8FF] animate-pulse" />
+              <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold tracking-widest text-[#38BDF8] uppercase bg-[#168BFF]/15 border border-[#168BFF]/30 px-4 py-2 rounded-custom-full w-fit">
+                <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse" />
                 TRUNG TÂM CHĂM SÓC Ô TÔ TẠI HUẾ
               </span>
 
               {/* H1 — duy nhất trên trang */}
               <h1
                 id="hero-heading"
-                className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.15]"
+                className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#F8FAFC] leading-[1.15]"
               >
                 Bảo dưỡng đúng,{" "}
                 <span className="text-gradient-blue">chăm xe kỹ</span>,{" "}
@@ -213,7 +214,7 @@ export default function HomePage() {
               </h1>
 
               {/* Mô tả */}
-              <p className="text-sm sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+              <p className="text-sm sm:text-lg text-[#CBD5E1] max-w-2xl leading-relaxed font-normal">
                 {autospaBrand.description} Kỹ thuật viên lành nghề, thiết bị chuyên dụng,
                 báo giá minh bạch trước khi thực hiện.
               </p>
@@ -223,7 +224,7 @@ export default function HomePage() {
                 <a href="#dat-lich">
                   <Button
                     variant="secondary"
-                    className="font-bold flex items-center justify-center gap-2 w-full sm:w-auto glow-primary"
+                    className="font-bold flex items-center justify-center gap-2 w-full sm:w-auto bg-[#38BDF8] text-[#020617] hover:bg-[#60A5FA] glow-primary"
                   >
                     <CalendarCheck className="w-5 h-5" />
                     Đặt lịch kiểm tra xe
@@ -232,7 +233,7 @@ export default function HomePage() {
                 <a href={`tel:${autospaContact.hotlineRaw}`}>
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto font-bold text-white border-white/20 hover:bg-white/10 hover:text-white flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto font-bold text-[#F8FAFC] border-slate-700 hover:bg-slate-800 hover:text-white flex items-center justify-center gap-2"
                   >
                     <Phone className="w-4 h-4" />
                     Gọi {autospaContact.hotlineDisplay}
@@ -249,9 +250,9 @@ export default function HomePage() {
                 ].map((item) => (
                   <div
                     key={item.text}
-                    className="flex items-center gap-1.5 text-xs text-slate-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-custom-full"
+                    className="flex items-center gap-1.5 text-xs text-[#CBD5E1] bg-white/5 border border-white/10 px-3 py-1.5 rounded-custom-full font-medium"
                   >
-                    <span className="text-[#168BFF]">{item.icon}</span>
+                    <span className="text-[#38BDF8]">{item.icon}</span>
                     {item.text}
                   </div>
                 ))}
@@ -276,12 +277,12 @@ export default function HomePage() {
                   key={i}
                   className="flex items-center gap-3.5 p-5 sm:p-6"
                 >
-                  <div className="w-10 h-10 rounded-custom-full bg-[#168BFF]/15 flex items-center justify-center text-[#00C8FF] flex-shrink-0">
+                  <div className="w-10 h-10 rounded-custom-full bg-[#168BFF]/15 flex items-center justify-center text-[#38BDF8] flex-shrink-0">
                     {item.icon}
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs sm:text-sm font-bold text-white leading-tight">{item.label}</span>
-                    <span className="text-[10px] sm:text-xs text-slate-500 mt-0.5">{item.sub}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#F8FAFC] leading-tight">{item.label}</span>
+                    <span className="text-[10px] sm:text-xs text-[#94A3B8] mt-0.5 font-medium">{item.sub}</span>
                   </div>
                 </div>
               ))}
@@ -298,6 +299,7 @@ export default function HomePage() {
               eyebrow="DỊCH VỤ CỦA CHÚNG TÔI"
               title="Dịch vụ chăm sóc ô tô toàn diện"
               description="Từ rửa xe chi tiết, vệ sinh nội thất đến phủ ceramic, dán phim cách nhiệt — mọi nhu cầu chăm sóc xe đều được đáp ứng chuyên nghiệp."
+              darkTheme={true}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -305,37 +307,37 @@ export default function HomePage() {
                 <Link
                   key={service.id}
                   href={`/dich-vu/${service.slug}`}
-                  className="group p-6 bg-bg-surface-2 border border-border-custom rounded-custom-lg flex flex-col gap-4 hover:border-[#168BFF]/50 hover:bg-[#0E1726] transition-all duration-200"
+                  className="group p-6 bg-[#0E1726] border border-slate-800 rounded-custom-lg flex flex-col gap-4 hover:border-[#38BDF8]/50 transition-all duration-200"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-custom-lg bg-[#168BFF]/15 flex items-center justify-center text-[#00C8FF] flex-shrink-0 group-hover:bg-[#168BFF]/25 transition-colors">
+                    <div className="w-12 h-12 rounded-custom-lg bg-[#168BFF]/15 flex items-center justify-center text-[#38BDF8] flex-shrink-0 group-hover:bg-[#168BFF]/25 transition-colors">
                       <ServiceIcon name={service.iconName} />
                     </div>
                     <div className="flex flex-col gap-1 flex-1 min-w-0">
-                      <h3 className="text-base font-bold text-white leading-tight">
+                      <h3 className="text-base font-bold text-[#F8FAFC] leading-tight">
                         {service.name}
                       </h3>
-                      <span className="text-xs text-slate-500 font-medium">
+                      <span className="text-xs text-[#94A3B8] font-medium">
                         {service.priceLabel}
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#CBD5E1] leading-relaxed font-normal">
                     {service.description}
                   </p>
-                  <div className="flex items-center justify-between mt-auto pt-2">
+                  <div className="flex items-center justify-between mt-auto pt-2 border-t border-slate-800/80">
                     <ul className="flex flex-col gap-1">
                       {service.items.slice(0, 2).map((item) => (
                         <li
                           key={item}
-                          className="flex items-center gap-1.5 text-[11px] text-slate-500"
+                          className="flex items-center gap-1.5 text-[11px] text-[#CBD5E1]"
                         >
-                          <CheckCircle className="w-3 h-3 text-[#168BFF] flex-shrink-0" />
+                          <CheckCircle className="w-3 h-3 text-[#38BDF8] flex-shrink-0" />
                           {item}
                         </li>
                       ))}
                     </ul>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-[#00C8FF] group-hover:translate-x-1 transition-all flex-shrink-0" />
+                    <ArrowRight className="w-4 h-4 text-[#60A5FA] group-hover:text-[#38BDF8] group-hover:translate-x-1 transition-all flex-shrink-0" />
                   </div>
                 </Link>
               ))}
@@ -345,7 +347,7 @@ export default function HomePage() {
               <Link href="/dich-vu">
                 <Button
                   variant="outline"
-                  className="font-bold flex items-center justify-center gap-2 mx-auto border-slate-700 text-slate-300 hover:border-[#168BFF] hover:text-[#00C8FF]"
+                  className="font-bold flex items-center justify-center gap-2 mx-auto border-slate-700 text-[#F8FAFC] hover:border-[#38BDF8] hover:text-[#38BDF8] hover:bg-[#1E293B]"
                 >
                   Xem tất cả dịch vụ
                   <ArrowRight className="w-4 h-4" />
@@ -364,6 +366,7 @@ export default function HomePage() {
               eyebrow="TẠI SAO CHỌN CHÚNG TÔI"
               title="Cam kết chất lượng dịch vụ tốt nhất tại Huế"
               description="Tiến Quốc Auto Spa không chỉ rửa xe – chúng tôi chăm sóc xe của bạn như chăm sóc xe của chính mình."
+              darkTheme={true}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -372,13 +375,13 @@ export default function HomePage() {
                 return (
                   <div
                     key={item.title}
-                    className="p-6 rounded-custom-lg border border-slate-800/50 bg-[#050A12]/50 hover:border-[#168BFF]/30 transition-colors"
+                    className="p-6 rounded-custom-lg border border-slate-800 bg-[#050A12] hover:border-[#38BDF8]/40 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-custom-md bg-[#168BFF]/15 flex items-center justify-center text-[#00C8FF] mb-4">
+                    <div className="w-10 h-10 rounded-custom-md bg-[#168BFF]/15 flex items-center justify-center text-[#38BDF8] mb-4">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <h4 className="text-base font-bold text-white mb-2">{item.title}</h4>
-                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    <h4 className="text-base font-bold text-[#F8FAFC] mb-2">{item.title}</h4>
+                    <p className="text-xs sm:text-sm text-[#CBD5E1] leading-relaxed font-normal">
                       {item.description}
                     </p>
                   </div>
@@ -397,24 +400,25 @@ export default function HomePage() {
               eyebrow="QUY TRÌNH LÀM VIỆC"
               title="Tiếp nhận chuyên nghiệp, minh bạch từng bước"
               description="5 bước quy trình chuẩn giúp bạn biết rõ xe mình đang được làm gì, chi phí bao nhiêu và hoàn thành khi nào."
+              darkTheme={true}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-4">
               {autospaProcess.map((step) => {
                 const Icon = iconMap[step.iconName] ?? Wrench;
                 return (
-                  <div key={step.step} className="relative flex flex-col gap-4 p-5 bg-bg-surface-2 border border-border-custom rounded-custom-lg">
+                  <div key={step.step} className="relative flex flex-col gap-4 p-5 bg-[#0E1726] border border-slate-800 rounded-custom-lg">
                     {/* Step number */}
                     <div className="flex items-center gap-3">
                       <span className="text-3xl font-extrabold text-gradient-blue">
                         {String(step.step).padStart(2, "0")}
                       </span>
-                      <div className="w-8 h-8 rounded-custom-md bg-[#168BFF]/15 flex items-center justify-center text-[#00C8FF]">
+                      <div className="w-8 h-8 rounded-custom-md bg-[#168BFF]/15 flex items-center justify-center text-[#38BDF8]">
                         <Icon className="w-4 h-4" />
                       </div>
                     </div>
-                    <h4 className="text-sm font-bold text-white leading-tight">{step.title}</h4>
-                    <p className="text-xs text-slate-400 leading-relaxed">{step.description}</p>
+                    <h4 className="text-sm font-bold text-[#F8FAFC] leading-tight">{step.title}</h4>
+                    <p className="text-xs text-[#CBD5E1] leading-relaxed">{step.description}</p>
                   </div>
                 );
               })}
@@ -431,6 +435,7 @@ export default function HomePage() {
               eyebrow="GÓI DỊCH VỤ ĐỀ XUẤT"
               title="Chọn gói phù hợp với nhu cầu của bạn"
               description="Từ chăm sóc cơ bản hàng tuần đến gói nâng cấp toàn diện — liên hệ để nhận báo giá theo dòng xe."
+              darkTheme={true}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
@@ -439,37 +444,37 @@ export default function HomePage() {
                   key={pkg.id}
                   className={`relative flex flex-col p-6 rounded-custom-lg border ${
                     pkg.isPopular
-                      ? "border-[#168BFF] bg-[#050A12]"
-                      : "border-slate-800 bg-[#050A12]/60"
+                      ? "border-[#38BDF8] bg-[#050A12]"
+                      : "border-slate-800 bg-[#050A12]/80"
                   }`}
                 >
                   {pkg.isPopular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="bg-[#168BFF] text-white text-xs font-bold px-4 py-1 rounded-custom-full flex items-center gap-1">
+                      <span className="bg-[#38BDF8] text-[#020617] text-xs font-extrabold px-4 py-1 rounded-custom-full flex items-center gap-1">
                         <Star className="w-3 h-3 fill-current" />
                         Phổ biến nhất
                       </span>
                     </div>
                   )}
-                  <h3 className="text-lg font-bold text-white mb-2">{pkg.name}</h3>
-                  <p className="text-sm text-slate-400 mb-4 leading-relaxed">{pkg.description}</p>
+                  <h3 className="text-lg font-bold text-[#F8FAFC] mb-2">{pkg.name}</h3>
+                  <p className="text-sm text-[#CBD5E1] mb-4 leading-relaxed font-normal">{pkg.description}</p>
                   <ul className="flex flex-col gap-2.5 mb-6 flex-1">
                     {pkg.services.map((s) => (
-                      <li key={s} className="flex items-start gap-2 text-sm text-slate-300">
-                        <CheckCircle className="w-4 h-4 text-[#168BFF] flex-shrink-0 mt-0.5" />
+                      <li key={s} className="flex items-start gap-2 text-sm text-[#CBD5E1]">
+                        <CheckCircle className="w-4 h-4 text-[#38BDF8] flex-shrink-0 mt-0.5" />
                         {s}
                       </li>
                     ))}
                   </ul>
                   <div className="flex flex-col gap-3 pt-4 border-t border-slate-800">
-                    <span className="text-sm text-slate-400 font-medium">{pkg.priceLabel}</span>
+                    <span className="text-sm text-[#94A3B8] font-medium">{pkg.priceLabel}</span>
                     <a href="#dat-lich">
                       <Button
                         variant={pkg.isPopular ? "secondary" : "outline"}
                         className={`w-full font-bold ${
-                          !pkg.isPopular
-                            ? "border-slate-700 text-slate-300 hover:border-[#168BFF] hover:text-[#00C8FF]"
-                            : ""
+                          pkg.isPopular
+                            ? "bg-[#38BDF8] text-[#020617] hover:bg-[#60A5FA]"
+                            : "border-slate-700 text-[#F8FAFC] hover:border-[#38BDF8] hover:text-[#38BDF8] hover:bg-[#1E293B]"
                         }`}
                       >
                         Đặt lịch gói này
@@ -483,7 +488,7 @@ export default function HomePage() {
         </section>
 
         {/* ============================================================
-            7. HÌNH ẢNH THỰC TẾ (Gallery placeholder)
+            7. HÌNH ẢNH THỰC TẾ (Gallery)
             ============================================================ */}
         <section className="py-16 sm:py-20">
           <Container>
@@ -491,6 +496,7 @@ export default function HomePage() {
               eyebrow="HÌNH ẢNH THỰC TẾ"
               title="Kết quả từ garage của chúng tôi"
               description="Hình ảnh xe trước và sau khi chăm sóc tại Tiến Quốc Auto Spa."
+              darkTheme={true}
             />
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
@@ -503,7 +509,7 @@ export default function HomePage() {
               ].map((img) => (
                 <div
                   key={img.src}
-                  className="relative aspect-video rounded-custom-lg overflow-hidden bg-bg-surface-2 border border-border-custom"
+                  className="relative aspect-video rounded-custom-lg overflow-hidden bg-[#0E1726] border border-slate-800"
                 >
                   <Image
                     src={img.src}
@@ -539,6 +545,7 @@ export default function HomePage() {
               eyebrow="Ý KIẾN KHÁCH HÀNG"
               title="Khách hàng nói gì về chúng tôi"
               description="Sự hài lòng của quý khách là động lực lớn nhất để chúng tôi không ngừng nâng cao chất lượng dịch vụ."
+              darkTheme={true}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -561,19 +568,19 @@ export default function HomePage() {
               ].map((review) => (
                 <div
                   key={review.name}
-                  className="p-6 bg-bg-surface-2 border border-border-custom rounded-custom-lg space-y-4"
+                  className="p-6 bg-[#0E1726] border border-slate-800 rounded-custom-lg space-y-4"
                 >
-                  <div className="flex text-amber-400 gap-1">
+                  <div className="flex text-[#FACC15] gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-current" />
                     ))}
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed italic">
+                  <p className="text-xs sm:text-sm text-[#CBD5E1] leading-relaxed italic font-normal">
                     &ldquo;{review.text}&rdquo;
                   </p>
-                  <div className="border-t border-border-custom pt-3 flex items-center justify-between text-xs">
-                    <span className="font-bold text-white">{review.name}</span>
-                    <span className="text-slate-500">{review.type}</span>
+                  <div className="border-t border-slate-800 pt-3 flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#F8FAFC]">{review.name}</span>
+                    <span className="text-[#94A3B8] font-medium">{review.type}</span>
                   </div>
                 </div>
               ))}
@@ -589,16 +596,16 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Text side */}
               <div className="flex flex-col gap-5">
-                <span className="text-xs font-bold tracking-widest text-amber-400 uppercase bg-amber-400/10 border border-amber-400/20 px-3.5 py-1.5 rounded-custom-full w-fit">
+                <span className="text-xs font-bold tracking-widest text-[#FACC15] uppercase bg-[#FACC15]/10 border border-[#FACC15]/20 px-3.5 py-1.5 rounded-custom-full w-fit">
                   DỊCH VỤ BỔ SUNG
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F8FAFC] leading-tight">
                   Cần xe du lịch tại Huế?
                 </h2>
-                <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+                <p className="text-sm sm:text-base text-[#CBD5E1] leading-relaxed font-normal">
                   Bên cạnh dịch vụ chăm sóc và bảo dưỡng ô tô, chúng tôi còn hỗ trợ
                   xe du lịch, đưa đón sân bay và tour riêng tại Huế qua{" "}
-                  <strong className="text-amber-400">HUECARTOUR</strong>.
+                  <strong className="text-[#FACC15]">HUECARTOUR</strong>.
                 </p>
 
                 {/* 3 tour nổi bật */}
@@ -607,15 +614,15 @@ export default function HomePage() {
                     <Link
                       key={tour.id}
                       href={`/dich-vu-xe-du-lich/${tour.slug}`}
-                      className="flex items-center justify-between p-3.5 bg-[#050A12]/60 border border-slate-800 rounded-custom-md hover:border-amber-500/30 transition-colors group"
+                      className="flex items-center justify-between p-3.5 bg-[#050A12] border border-slate-800 rounded-custom-md hover:border-[#FACC15]/40 transition-colors group"
                     >
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-semibold text-white group-hover:text-amber-400 transition-colors">
+                        <span className="text-sm font-bold text-[#F8FAFC] group-hover:text-[#FACC15] transition-colors">
                           {tour.name}
                         </span>
-                        <span className="text-xs text-slate-500">{tour.duration}</span>
+                        <span className="text-xs text-[#94A3B8] font-medium">{tour.duration}</span>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#FACC15] group-hover:translate-x-1 transition-all" />
                     </Link>
                   ))}
                 </div>
@@ -625,7 +632,7 @@ export default function HomePage() {
                   <Link href="/dich-vu-xe-du-lich">
                     <Button
                       variant="outline"
-                      className="font-bold border-amber-500/40 text-amber-400 hover:bg-amber-500/10 hover:border-amber-400 w-full sm:w-auto"
+                      className="font-bold border-[#FACC15]/40 text-[#FACC15] hover:bg-[#FACC15]/10 hover:border-[#FACC15] w-full sm:w-auto"
                     >
                       Xem dịch vụ xe du lịch
                     </Button>
@@ -633,7 +640,7 @@ export default function HomePage() {
                   <a href={`tel:${autospaContact.hotlineRaw}`}>
                     <Button
                       variant="outline"
-                      className="font-bold border-slate-700 text-slate-300 hover:border-slate-500 w-full sm:w-auto"
+                      className="font-bold border-slate-700 text-[#F8FAFC] hover:border-slate-500 w-full sm:w-auto"
                     >
                       Liên hệ đặt xe
                     </Button>
@@ -652,7 +659,7 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#07111F]/60 to-transparent" />
                 <div className="absolute bottom-4 left-4">
-                  <span className="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-custom-full">
+                  <span className="text-xs font-bold text-[#FACC15] uppercase tracking-widest bg-[#FACC15]/10 border border-[#FACC15]/20 px-3 py-1 rounded-custom-full">
                     HUECARTOUR
                   </span>
                 </div>
@@ -670,6 +677,7 @@ export default function HomePage() {
               eyebrow="GIẢI ĐÁP THẮC MẮC"
               title="Câu hỏi thường gặp"
               description="Giải đáp nhanh các thắc mắc phổ biến nhất từ khách hàng khi sử dụng dịch vụ chăm sóc xe tại Huế."
+              darkTheme={true}
             />
             <FaqAccordion items={autospaFaq} />
           </Container>
@@ -683,41 +691,42 @@ export default function HomePage() {
             <SectionHeading
               eyebrow="KẾT NỐI VỚI CHÚNG TÔI"
               title="Thông tin liên hệ"
+              darkTheme={true}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
               {/* Contact info box */}
-              <div className="p-6 sm:p-8 bg-bg-surface-2 border border-border-custom rounded-custom-lg space-y-6">
-                <h3 className="text-lg font-bold text-white pb-3 border-b border-border-custom">
+              <div className="p-6 sm:p-8 bg-[#0E1726] border border-slate-800 rounded-custom-lg space-y-6">
+                <h3 className="text-lg font-extrabold text-[#F8FAFC] pb-3 border-b border-slate-800">
                   Tiến Quốc Auto Spa
                 </h3>
 
-                <ul className="space-y-4 text-xs sm:text-sm leading-relaxed text-slate-400">
+                <ul className="space-y-4 text-xs sm:text-sm leading-relaxed text-[#CBD5E1]">
                   <li className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-[#168BFF] flex-shrink-0 mt-0.5" />
+                    <MapPin className="w-5 h-5 text-[#38BDF8] flex-shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-white block">Địa chỉ:</span>
+                      <span className="font-bold text-[#F8FAFC] block">Địa chỉ:</span>
                       <span>{autospaContact.address}</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 text-[#168BFF] flex-shrink-0 mt-0.5" />
+                    <Phone className="w-5 h-5 text-[#38BDF8] flex-shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-white block">Hotline:</span>
+                      <span className="font-bold text-[#F8FAFC] block">Hotline:</span>
                       <a
                         href={`tel:${autospaContact.hotlineRaw}`}
-                        className="font-bold text-[#168BFF] text-base hover:text-[#00C8FF] transition-colors"
+                        className="font-bold text-[#38BDF8] text-base hover:text-[#60A5FA] transition-colors"
                       >
                         {autospaContact.hotlineDisplay}
                       </a>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-[#168BFF] flex-shrink-0 mt-0.5" />
+                    <Clock className="w-5 h-5 text-[#38BDF8] flex-shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-white block">Giờ làm việc:</span>
+                      <span className="font-bold text-[#F8FAFC] block">Giờ làm việc:</span>
                       <span>{autospaContact.workingHours.hours}</span>
-                      <span className="block text-xs text-slate-500">
+                      <span className="block text-xs text-[#94A3B8] font-medium">
                         {autospaContact.workingHours.days}
                       </span>
                     </div>
@@ -725,9 +734,9 @@ export default function HomePage() {
                 </ul>
 
                 {/* Action buttons */}
-                <div className="flex flex-col gap-3 pt-2 border-t border-border-custom">
+                <div className="flex flex-col gap-3 pt-2 border-t border-slate-800">
                   <a href={`tel:${autospaContact.hotlineRaw}`}>
-                    <Button variant="secondary" className="w-full font-bold flex items-center justify-center gap-2">
+                    <Button variant="secondary" className="w-full font-bold flex items-center justify-center gap-2 bg-[#38BDF8] text-[#020617] hover:bg-[#60A5FA]">
                       <Phone className="w-4 h-4" />
                       Gọi ngay
                     </Button>
@@ -739,7 +748,7 @@ export default function HomePage() {
                   >
                     <Button
                       variant="outline"
-                      className="w-full font-bold border-slate-700 text-slate-300 hover:border-[#168BFF] hover:text-[#00C8FF] flex items-center justify-center gap-2"
+                      className="w-full font-bold border-slate-700 text-[#F8FAFC] hover:border-[#38BDF8] hover:text-[#38BDF8] hover:bg-[#1E293B] flex items-center justify-center gap-2"
                     >
                       <MapPin className="w-4 h-4" />
                       Xem trên Maps

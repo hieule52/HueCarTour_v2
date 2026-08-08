@@ -42,9 +42,9 @@ export const bookingFormSchema = z.object({
     .min(1, "Số hành khách tối thiểu là 1")
     .max(50, "Vui lòng liên hệ trực tiếp cho đoàn trên 50 người"),
   tourInterest: z.string().max(100, "Tên tour tối đa 100 ký tự").optional(),
-  note: z.string().max(500, "Ghi chú tối đa 500 ký tự").optional(),
-  // Honeypot chống spam bot
-  email: z.string().max(50, "Spam detected").optional(),
+  note: z.string().max(1000, "Ghi chú tối đa 1000 ký tự").optional(),
+  // Honeypot chống spam bot (đổi tên để tránh Chrome Autofill tự điền email)
+  website_url: z.string().max(50, "Spam detected").optional(),
 });
 
 export type BookingFormData = z.infer<typeof bookingFormSchema>;

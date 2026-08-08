@@ -42,8 +42,9 @@ export const autospaContact = {
   hotlineRaw: "0364483597",
   contactName: "Tiến Quốc Auto Spa",
   address: "147 Phùng Quán, phường Thanh Thủy, TP Huế",
-  facebookUrl: "https://www.facebook.com/quoc.tien.5811877?locale=vi_VN",
-  zaloUrl: "REPLACE_WITH_AUTOSPA_ZALO_URL",
+  facebookUrl: "https://www.facebook.com/profile.php?id=100087019456301&locale=vi_VN",
+  messengerUrl: "https://m.me/100087019456301",
+  zaloUrl: "https://zalo.me/0364483597",
   googleMapsEmbedUrl:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3823.4!2d107.5698!3d16.4637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3141a1276b726513%3A0x4f6d30e2f9c7a5a8!2s147%20Ph%C3%B9ng%20Qu%C3%A1n%2C%20Thanh%20Th%E1%BB%A7y%2C%20Hu%E1%BA%BF%2C%20Vi%E1%BB%87t%20Nam!5e0!3m2!1svi!2s!4v1690000000000!5m2!1svi!2s",
   googleMapsDirectionUrl: "https://maps.app.goo.gl/e8ZZ1yZJSDCmLSs88",
@@ -64,7 +65,7 @@ export const huecartourContact = {
   email: "huecartours@gmail.com",
   address: "147 Phùng Quán, phường Thanh Thủy, TP Huế",
   facebookUrl: "https://www.facebook.com/quoc.tien.5811877?locale=vi_VN",
-  zaloUrl: "REPLACE_WITH_ZALO_URL",
+  zaloUrl: "https://zalo.me/0334526572",
   messengerUrl: "https://www.facebook.com/quoc.tien.5811877?locale=vi_VN",
   whatsappUrl: "REPLACE_WITH_WHATSAPP_URL",
   googleMapsEmbedUrl:
@@ -83,10 +84,16 @@ export const autospaSocialLinks: SocialLink[] = [
     isPlaceholder: false,
   },
   {
+    platform: "messenger",
+    label: "Messenger Tiến Quốc Auto Spa",
+    url: autospaContact.messengerUrl,
+    isPlaceholder: false,
+  },
+  {
     platform: "zalo",
     label: "Zalo Auto Spa",
     url: autospaContact.zaloUrl,
-    isPlaceholder: true,
+    isPlaceholder: false,
   },
 ];
 

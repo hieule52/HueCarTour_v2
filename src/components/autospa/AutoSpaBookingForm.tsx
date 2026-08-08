@@ -1,6 +1,6 @@
 // ============================================================
 // src/components/autospa/AutoSpaBookingForm.tsx
-// Biểu mẫu đặt lịch chăm sóc xe Auto Spa chuyên nghiệp
+// Biểu mẫu đặt lịch Auto Spa chuyên nghiệp — High Contrast Dark Theme
 // ============================================================
 
 "use client";
@@ -8,20 +8,16 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Clock, User, Phone, Car, Sparkles, AlertCircle, Copy, Check, Send } from "lucide-react";
+import { Calendar, Clock, User, Phone, Car, AlertCircle } from "lucide-react";
 import { autoSpaBookingSchema, type AutoSpaBookingFormData } from "@/schemas/autospa-booking.schema";
 import { autospaServices } from "@/data/autospa";
-import { autospaContact } from "@/data/site";
 import { Button } from "../common/Button";
+import { SuccessMessage } from "../common/SuccessMessage";
 import { cn } from "@/lib/utils";
 
 export const AutoSpaBookingForm: React.FC = () => {
-  const [copied, setCopied] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [successData, setSuccessData] = useState<{
-    messageText: string;
-    whatsappUrl: string | null;
-  } | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const {
     register,
@@ -35,18 +31,17 @@ export const AutoSpaBookingForm: React.FC = () => {
       phone: "",
       carModel: "",
       licensePlate: "",
-      service: "Bảo dưỡng định kỳ",
+      service: autospaServices[0]?.name || "Rửa xe chi tiết",
       date: new Date().toISOString().split("T")[0],
-      time: "09:00",
+      time: "08:30",
       carCondition: "",
       note: "",
-      email: "", // Honeypot field
+      website_url: "", // Honeypot field (tránh Chrome Autofill tự điền)
     },
   });
 
   const onSubmit = async (data: AutoSpaBookingFormData) => {
     setApiError(null);
-    setSuccessData(null);
     try {
       const response = await fetch("/api/autospa-booking", {
         method: "POST",
@@ -56,170 +51,122 @@ export const AutoSpaBookingForm: React.FC = () => {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || "Gửi lịch hẹn thất bại. Vui lòng thử lại.");
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error ||
+            "Không thể gửi yêu cầu lúc này. Vui lòng thử lại sau hoặc gọi hotline 036 448 3597."
+        );
       }
 
-      setSuccessData({
-        messageText: result.messageText,
-        whatsappUrl: result.whatsappUrl,
-      });
+      // Chỉ chuyển sang success state khi email đã gửi thành công
+      setIsSuccess(true);
       reset();
     } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : "Đã xảy ra lỗi kết nối hệ thống.";
+      // Giữ nguyên dữ liệu đã nhập nếu bị lỗi gửi
+      const errMsg =
+        err instanceof Error
+          ? err.message
+          : "Không thể gửi yêu cầu lúc này. Vui lòng thử lại sau hoặc gọi hotline 036 448 3597.";
       setApiError(errMsg);
     }
   };
 
-  const copyToClipboard = () => {
-    if (successData?.messageText) {
-      navigator.clipboard.writeText(successData.messageText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    }
+  const handleResetForm = () => {
+    setIsSuccess(false);
+    reset();
+    const el = document.getElementById("spa-booking-form");
+    el?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="w-full bg-bg-surface border border-border-custom rounded-custom-lg shadow-custom-lg p-6 sm:p-8" id="spa-booking-form">
-      <h3 className="text-xl sm:text-2xl font-bold text-text-primary mb-6 text-center">
+    <div
+      className="w-full bg-[#0E1726] border border-slate-800 rounded-custom-lg shadow-xl p-6 sm:p-8"
+      id="spa-booking-form"
+    >
+      <h3 className="text-xl sm:text-2xl font-extrabold text-[#F8FAFC] mb-6 text-center">
         Đặt Lịch Chăm Sóc Xe Chuyên Nghiệp
       </h3>
 
       <div aria-live="polite">
         {apiError && (
-          <div className="mb-6 p-4 rounded-custom-md bg-state-error/15 border border-state-error/20 text-state-error text-sm flex gap-2.5">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <div className="mb-6 p-4 rounded-custom-md bg-red-950/40 border border-red-800 text-red-300 text-sm flex gap-2.5">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-400" />
             <span>{apiError}</span>
           </div>
         )}
       </div>
 
-      {successData ? (
-        // UI thành công và hướng dẫn chuyển đổi
-        <div className="space-y-6" aria-live="polite">
-          <div className="p-4 rounded-custom-md bg-emerald-950/20 border border-emerald-900/30 text-emerald-300 text-sm flex gap-2.5">
-            <Sparkles className="w-5 h-5 text-secondary flex-shrink-0" />
-            <div>
-              <p className="font-bold mb-1">Nội dung đặt lịch đã được khởi tạo!</p>
-              <p className="text-xs text-text-secondary leading-relaxed">
-                Chi tiết thông tin xe và dịch vụ đặt hẹn đã sẵn sàng. Hãy gửi qua Zalo hoặc gửi WhatsApp trực tiếp để kỹ thuật viên Tiến Quốc Auto Spa liên hệ xác nhận giờ rảnh.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative p-4 rounded-custom-md border border-border-custom bg-bg-surface-muted text-xs font-mono whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
-            {successData.messageText}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {successData.whatsappUrl ? (
-              <a
-                href={successData.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-custom-md bg-green-600 text-white font-bold text-sm hover:bg-green-700 transition-colors focus-visible:outline-2"
-              >
-                <Send className="w-4 h-4" />
-                Gửi qua WhatsApp
-              </a>
-            ) : (
-              <Button disabled variant="outline" className="text-sm font-bold border-gray-600 text-gray-400">
-                WhatsApp chưa cấu hình
-              </Button>
-            )}
-
-            <Button
-              onClick={copyToClipboard}
-              variant="secondary"
-              className="text-sm font-bold flex items-center justify-center gap-2"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  Đã sao chép!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4" />
-                  Sao chép gửi Zalo
-                </>
-              )}
-            </Button>
-          </div>
-
-          <div className="text-center pt-2">
-            <p className="text-xs text-text-secondary">
-              Hoặc gọi hotline trực tiếp để đặt giờ nhanh:{" "}
-              <a
-                href={`tel:${autospaContact.hotlineRaw}`}
-                className="font-bold text-primary hover:underline"
-              >
-                {autospaContact.hotlineDisplay}
-              </a>
-            </p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-3 text-xs text-text-secondary hover:text-text-primary"
-              onClick={() => setSuccessData(null)}
-            >
-              Đặt lịch xe khác
-            </Button>
-          </div>
-        </div>
+      {isSuccess ? (
+        <SuccessMessage
+          actionLabel="Tạo lịch hẹn mới"
+          onReset={handleResetForm}
+        />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Honeypot field (hidden) */}
-          <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden">
-            <label htmlFor="email_spa">Email</label>
+          <div
+            className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden"
+            aria-hidden="true"
+          >
+            <label htmlFor="website_url_spa">Website</label>
             <input
-              id="email_spa"
+              id="website_url_spa"
               type="text"
               tabIndex={-1}
               autoComplete="off"
-              {...register("email")}
+              {...register("website_url")}
             />
           </div>
 
           {/* Họ tên & Số điện thoại */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label htmlFor="fullName" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <User className="w-4 h-4 text-primary" />
-                Họ và tên <span className="text-state-error">*</span>
+              <label
+                htmlFor="fullName"
+                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              >
+                <User className="w-4 h-4 text-[#38BDF8]" />
+                Họ và tên <span className="text-red-400">*</span>
               </label>
               <input
                 id="fullName"
                 type="text"
                 placeholder="Nhập họ và tên"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none focus:ring-1 focus:ring-border-focus",
-                  errors.fullName ? "border-state-error" : "border-border-custom"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  errors.fullName ? "border-red-500" : "border-slate-700"
                 )}
                 {...register("fullName")}
               />
               {errors.fullName && (
-                <p className="text-[11px] font-semibold text-state-error">{errors.fullName.message}</p>
+                <p className="text-[11px] font-semibold text-red-400">
+                  {errors.fullName.message}
+                </p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="phone" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Phone className="w-4 h-4 text-primary" />
-                Số điện thoại / Zalo <span className="text-state-error">*</span>
+              <label
+                htmlFor="phone"
+                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              >
+                <Phone className="w-4 h-4 text-[#38BDF8]" />
+                Số điện thoại / Zalo <span className="text-red-400">*</span>
               </label>
               <input
                 id="phone"
                 type="tel"
                 placeholder="Ví dụ: 0905123456"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none focus:ring-1 focus:ring-border-focus",
-                  errors.phone ? "border-state-error" : "border-border-custom"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  errors.phone ? "border-red-500" : "border-slate-700"
                 )}
                 {...register("phone")}
               />
               {errors.phone && (
-                <p className="text-[11px] font-semibold text-state-error">{errors.phone.message}</p>
+                <p className="text-[11px] font-semibold text-red-400">
+                  {errors.phone.message}
+                </p>
               )}
             </div>
           </div>
@@ -227,138 +174,168 @@ export const AutoSpaBookingForm: React.FC = () => {
           {/* Dòng xe & Biển số xe */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label htmlFor="carModel" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Car className="w-4 h-4 text-primary" />
-                Dòng xe (ví dụ: Toyota Vios, Mazda 3) <span className="text-state-error">*</span>
+              <label
+                htmlFor="carModel"
+                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              >
+                <Car className="w-4 h-4 text-[#38BDF8]" />
+                Dòng xe <span className="text-red-400">*</span>
               </label>
               <input
                 id="carModel"
                 type="text"
-                placeholder="Nhập dòng xe của bạn"
+                placeholder="Ví dụ: Toyota Vios, Mazda 3, Ford Ranger..."
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none focus:ring-1 focus:ring-border-focus",
-                  errors.carModel ? "border-state-error" : "border-border-custom"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  errors.carModel ? "border-red-500" : "border-slate-700"
                 )}
                 {...register("carModel")}
               />
               {errors.carModel && (
-                <p className="text-[11px] font-semibold text-state-error">{errors.carModel.message}</p>
+                <p className="text-[11px] font-semibold text-red-400">
+                  {errors.carModel.message}
+                </p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="licensePlate" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-primary" />
+              <label
+                htmlFor="licensePlate"
+                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              >
+                <Car className="w-4 h-4 text-[#38BDF8]" />
                 Biển số xe (không bắt buộc)
               </label>
               <input
                 id="licensePlate"
                 type="text"
                 placeholder="Ví dụ: 75A-123.45"
-                className={cn(
-                  "w-full h-11 px-3.5 border border-border-custom rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none"
-                )}
+                className="w-full h-11 px-3.5 border border-slate-700 rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none"
                 {...register("licensePlate")}
               />
-              {errors.licensePlate && (
-                <p className="text-[11px] font-semibold text-state-error">{errors.licensePlate.message}</p>
-              )}
             </div>
           </div>
 
-          {/* Dịch vụ Auto Spa */}
+          {/* Chọn Dịch Vụ */}
           <div className="space-y-1.5">
-            <label htmlFor="service" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-primary" />
-              Dịch vụ đăng ký <span className="text-state-error">*</span>
+            <label
+              htmlFor="service"
+              className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+            >
+              <Car className="w-4 h-4 text-[#38BDF8]" />
+              Dịch vụ cần làm <span className="text-red-400">*</span>
             </label>
             <select
               id="service"
               className={cn(
-                "w-full h-11 px-3.5 border border-border-custom rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none"
+                "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] border-slate-700 focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                errors.service ? "border-red-500" : "border-slate-700"
               )}
               {...register("service")}
             >
-              {autospaServices.map((s) => (
-                <option key={s.id} value={s.name}>
-                  {s.name}
+              {autospaServices.map((svc) => (
+                <option key={svc.id} value={svc.name} className="bg-[#050A12] text-[#F8FAFC]">
+                  {svc.name} ({svc.priceLabel})
                 </option>
               ))}
-              <option value="Khác">Dịch vụ khác / Cần tư vấn thêm</option>
             </select>
+            {errors.service && (
+              <p className="text-[11px] font-semibold text-red-400">
+                {errors.service.message}
+              </p>
+            )}
           </div>
 
-          {/* Ngày hẹn & Giờ hẹn */}
+          {/* Ngày đặt & Giờ hẹn */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label htmlFor="date" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-primary" />
-                Ngày hẹn <span className="text-state-error">*</span>
+              <label
+                htmlFor="date"
+                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              >
+                <Calendar className="w-4 h-4 text-[#38BDF8]" />
+                Ngày hẹn <span className="text-red-400">*</span>
               </label>
               <input
                 id="date"
                 type="date"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none focus:ring-1 focus:ring-border-focus",
-                  errors.date ? "border-state-error" : "border-border-custom"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  errors.date ? "border-red-500" : "border-slate-700"
                 )}
                 {...register("date")}
               />
               {errors.date && (
-                <p className="text-[11px] font-semibold text-state-error">{errors.date.message}</p>
+                <p className="text-[11px] font-semibold text-red-400">
+                  {errors.date.message}
+                </p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="time" className="text-xs sm:text-sm font-bold text-text-primary flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-primary" />
-                Giờ hẹn mong muốn <span className="text-state-error">*</span>
+              <label
+                htmlFor="time"
+                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              >
+                <Clock className="w-4 h-4 text-[#38BDF8]" />
+                Giờ hẹn <span className="text-red-400">*</span>
               </label>
               <input
                 id="time"
                 type="time"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none focus:ring-1 focus:ring-border-focus",
-                  errors.time ? "border-state-error" : "border-border-custom"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  errors.time ? "border-red-500" : "border-slate-700"
                 )}
                 {...register("time")}
               />
               {errors.time && (
-                <p className="text-[11px] font-semibold text-state-error">{errors.time.message}</p>
+                <p className="text-[11px] font-semibold text-red-400">
+                  {errors.time.message}
+                </p>
               )}
             </div>
           </div>
 
           {/* Tình trạng xe hiện tại */}
           <div className="space-y-1.5">
-            <label htmlFor="carCondition" className="text-xs sm:text-sm font-bold text-text-primary">
-              Tình trạng xe hiện tại hoặc yêu cầu xử lý <span className="text-state-error">*</span>
+            <label
+              htmlFor="carCondition"
+              className="text-xs sm:text-sm font-bold text-[#F8FAFC]"
+            >
+              Tình trạng xe hiện tại hoặc yêu cầu xử lý{" "}
+              <span className="text-red-400">*</span>
             </label>
             <textarea
               id="carCondition"
               rows={3}
               placeholder="Ví dụ: Xe bị bụi bẩn nhiều, móp nhẹ cản trước, hoặc sơn xe bị xước nhẹ cần đánh bóng..."
               className={cn(
-                "w-full p-3.5 border rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none resize-none",
-                errors.carCondition ? "border-state-error" : "border-border-custom"
+                "w-full p-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none resize-none",
+                errors.carCondition ? "border-red-500" : "border-slate-700"
               )}
               {...register("carCondition")}
             />
             {errors.carCondition && (
-              <p className="text-[11px] font-semibold text-state-error">{errors.carCondition.message}</p>
+              <p className="text-[11px] font-semibold text-red-400">
+                {errors.carCondition.message}
+              </p>
             )}
           </div>
 
           {/* Ghi chú thêm */}
           <div className="space-y-1.5">
-            <label htmlFor="note" className="text-xs sm:text-sm font-bold text-text-primary">
+            <label
+              htmlFor="note"
+              className="text-xs sm:text-sm font-bold text-[#F8FAFC]"
+            >
               Ghi chú thêm (nếu có)
             </label>
             <textarea
               id="note"
               rows={2}
               placeholder="Nhập ghi chú hoặc thời gian đặc biệt..."
-              className="w-full p-3.5 border border-border-custom rounded-custom-md text-sm bg-bg-surface focus:border-border-focus focus:outline-none resize-none"
+              className="w-full p-3.5 border border-slate-700 rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none resize-none"
               {...register("note")}
             />
           </div>
@@ -366,9 +343,9 @@ export const AutoSpaBookingForm: React.FC = () => {
           <Button
             type="submit"
             isLoading={isSubmitting}
-            className="w-full font-bold h-12 text-sm sm:text-base mt-2"
+            className="w-full font-bold h-12 text-sm sm:text-base mt-2 bg-[#38BDF8] text-[#020617] hover:bg-[#60A5FA] disabled:opacity-55 disabled:cursor-not-allowed"
           >
-            Đăng Ký Đặt Lịch Chăm Sóc Xe
+            {isSubmitting ? "Đang gửi yêu cầu..." : "Đăng Ký Đặt Lịch Chăm Sóc Xe"}
           </Button>
         </form>
       )}

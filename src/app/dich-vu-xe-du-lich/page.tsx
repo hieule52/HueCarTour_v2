@@ -1,7 +1,7 @@
 // ============================================================
 // src/app/dich-vu-xe-du-lich/page.tsx
 // Landing page HUECARTOUR – Dịch vụ xe du lịch tại Huế
-// Theme HueCarTour (light/premium) — dark text on cream background
+// High Contrast — Tối ưu tương phản 100% trên nền sáng & tối
 // ============================================================
 
 import type { Metadata } from "next";
@@ -12,12 +12,12 @@ import {
   Phone,
   Car,
   Clock,
-  MapPin,
   CheckCircle,
   Users,
   Shield,
   Star,
   CalendarCheck,
+  MapPin,
 } from "lucide-react";
 import { Container } from "@/components/common/Container";
 import { SectionHeading } from "@/components/common/SectionHeading";
@@ -78,20 +78,14 @@ export default function DichVuXeDuLichPage() {
     <>
       <JsonLd data={jsonLdData} />
 
-      {/* Wrap trong theme-huecartour để override CSS tokens sang light */}
-      <div className="theme-huecartour flex flex-col">
+      <div className="theme-huecartour flex flex-col bg-[#F7F6F1]">
         {/* Breadcrumb */}
-        <Breadcrumb
-          items={[
-            { label: "Xe du lịch Huế" },
-          ]}
-        />
+        <Breadcrumb items={[{ label: "Xe du lịch Huế" }]} />
 
         {/* ============================================================
             HERO
             ============================================================ */}
         <section className="relative overflow-hidden bg-[#F7F6F1] py-16 sm:py-24">
-          {/* Subtle pattern */}
           <div
             className="absolute inset-0 opacity-[0.04] pointer-events-none"
             style={{
@@ -112,21 +106,21 @@ export default function DichVuXeDuLichPage() {
                     className="h-14 w-auto object-contain"
                   />
                   <div className="flex flex-col leading-none gap-1">
-                    <span className="font-extrabold text-xl tracking-tight text-[#172236]">
+                    <span className="font-extrabold text-xl tracking-tight text-[#0F172A]">
                       HUE CAR TOURS
                     </span>
-                    <span className="text-[11px] uppercase tracking-widest font-semibold text-[#667085]">
+                    <span className="text-[11px] uppercase tracking-widest font-bold text-[#1E293B]">
                       Xe riêng miền Trung
                     </span>
                   </div>
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-extrabold text-[#101828] leading-[1.1] tracking-tight">
+                <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0F172A] leading-[1.1] tracking-tight">
                   Xe riêng có tài xế tại{" "}
                   <span className="text-[#172236]">Huế</span>
                 </h1>
 
-                <p className="text-[#667085] text-sm sm:text-lg leading-relaxed">
+                <p className="text-[#475569] text-sm sm:text-lg leading-relaxed font-normal">
                   Đưa đón sân bay Phú Bài, tour tham quan Cố đô, xe đi Đà Nẵng, Hội An,
                   Quảng Trị và Phong Nha. Xe đời mới 4–7–16 chỗ, tài xế kinh nghiệm,
                   báo giá công khai.
@@ -142,7 +136,7 @@ export default function DichVuXeDuLichPage() {
                   ].map((item) => (
                     <div
                       key={item.text}
-                      className="flex items-center gap-1.5 text-xs font-semibold text-[#172236] bg-white border border-[#E4E7EC] px-3 py-1.5 rounded-full shadow-sm"
+                      className="flex items-center gap-1.5 text-xs font-bold text-[#0F172A] bg-white border border-[#CBD5E1] px-3 py-1.5 rounded-full shadow-sm"
                     >
                       <span className="text-[#172236]">{item.icon}</span>
                       {item.text}
@@ -153,8 +147,8 @@ export default function DichVuXeDuLichPage() {
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <a href="#dat-xe">
                     <Button
-                      variant="secondary"
-                      className="w-full sm:w-auto font-bold flex items-center gap-2"
+                      variant="primary"
+                      className="w-full sm:w-auto font-bold flex items-center gap-2 bg-[#172236] text-white hover:bg-[#0F172A]"
                     >
                       <CalendarCheck className="w-4 h-4" />
                       Nhận báo giá ngay
@@ -163,7 +157,7 @@ export default function DichVuXeDuLichPage() {
                   <a href={`tel:${huecartourContact.hotlineRaw}`}>
                     <Button
                       variant="outline"
-                      className="w-full sm:w-auto font-bold flex items-center gap-2 border-[#172236]/20 text-[#172236] hover:bg-[#172236] hover:text-white"
+                      className="w-full sm:w-auto font-bold flex items-center gap-2 border-2 border-[#0F172A] text-[#0F172A] hover:bg-[#0F172A] hover:text-white"
                     >
                       <Phone className="w-4 h-4" />
                       Gọi {huecartourContact.hotlineDisplay}
@@ -173,7 +167,7 @@ export default function DichVuXeDuLichPage() {
               </div>
 
               {/* Image */}
-              <div className="relative aspect-video lg:aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-[#E4E7EC]">
+              <div className="relative aspect-video lg:aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-[#CBD5E1]">
                 <Image
                   src="/assets/images/brand/huecartour.png"
                   alt="HUECARTOUR – Xe riêng du lịch Huế"
@@ -188,7 +182,7 @@ export default function DichVuXeDuLichPage() {
         </section>
 
         {/* ============================================================
-            COMMIT STRIP
+            COMMIT STRIP (Nền tối Navy #172236 - Chữ trắng & slate sáng)
             ============================================================ */}
         <section className="bg-[#172236] py-5">
           <Container>
@@ -201,7 +195,7 @@ export default function DichVuXeDuLichPage() {
               ].map((item) => (
                 <div key={item.label} className="px-4 py-3 flex flex-col gap-0.5">
                   <span className="text-white text-xs sm:text-sm font-bold">{item.label}</span>
-                  <span className="text-[#94A3B8] text-[10px] sm:text-xs">{item.sub}</span>
+                  <span className="text-[#CBD5E1] text-[10px] sm:text-xs font-medium">{item.sub}</span>
                 </div>
               ))}
             </div>
@@ -209,7 +203,7 @@ export default function DichVuXeDuLichPage() {
         </section>
 
         {/* ============================================================
-            DANH SÁCH TOUR
+            DANH SÁCH TOUR (Nền sáng #F7F6F1)
             ============================================================ */}
         <section className="py-16 sm:py-20 bg-[#F7F6F1]">
           <Container>
@@ -217,6 +211,7 @@ export default function DichVuXeDuLichPage() {
               eyebrow="TUYẾN XE & TOUR DU LỊCH"
               title="Tất cả tuyến xe và tour tại Huế"
               description="Chọn hành trình bạn cần để xem chi tiết lịch trình, điểm dừng và bảng giá xe riêng."
+              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -228,23 +223,24 @@ export default function DichVuXeDuLichPage() {
         </section>
 
         {/* ============================================================
-            ĐỘI XE
+            ĐỘI XE (Nền trắng #FFFFFF)
             ============================================================ */}
-        <section className="py-16 sm:py-20 bg-white border-y border-[#E4E7EC]">
+        <section className="py-16 sm:py-20 bg-white border-y border-[#CBD5E1]">
           <Container>
             <SectionHeading
               eyebrow="ĐỘI XE"
               title="Xe đời mới, sạch sẽ và thoải mái"
               description="Đội xe đa dạng phục vụ từ cặp đôi đến đoàn khách lớn. Tất cả đều được bảo dưỡng thường xuyên tại Tiến Quốc Auto Spa."
+              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {vehicles.map((vehicle) => (
                 <div
                   key={vehicle.id}
-                  className="rounded-2xl border border-[#E4E7EC] bg-white overflow-hidden hover:shadow-md transition-shadow"
+                  className="rounded-2xl border border-[#CBD5E1] bg-white overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <div className="relative aspect-video bg-[#F2F4F7] overflow-hidden">
+                  <div className="relative aspect-video bg-[#F1F5F9] overflow-hidden">
                     <Image
                       src={vehicle.imageSrc}
                       alt={vehicle.imageAlt}
@@ -255,19 +251,19 @@ export default function DichVuXeDuLichPage() {
                   </div>
                   <div className="p-5 flex flex-col gap-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base font-bold text-[#101828]">{vehicle.name}</h3>
-                      <span className="text-xs font-semibold text-[#667085] bg-[#F2F4F7] px-2 py-0.5 rounded-full">
+                      <h3 className="text-base font-extrabold text-[#0F172A]">{vehicle.name}</h3>
+                      <span className="text-xs font-bold text-[#0F172A] bg-[#E2E8F0] px-2.5 py-0.5 rounded-full">
                         {vehicle.type}
                       </span>
                     </div>
-                    <p className="text-xs text-[#667085] leading-relaxed">{vehicle.description}</p>
-                    <div className="flex items-center gap-4 pt-2 border-t border-[#E4E7EC] text-xs text-[#667085]">
+                    <p className="text-xs text-[#475569] leading-relaxed">{vehicle.description}</p>
+                    <div className="flex items-center gap-4 pt-2 border-t border-[#E2E8F0] text-xs text-[#334155] font-semibold">
                       <span className="flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5" />
+                        <Users className="w-3.5 h-3.5 text-[#172236]" />
                         {vehicle.maxPassengers} khách
                       </span>
                       <span className="flex items-center gap-1">
-                        <Car className="w-3.5 h-3.5" />
+                        <Car className="w-3.5 h-3.5 text-[#172236]" />
                         {vehicle.maxLuggage} kiện hành lý
                       </span>
                     </div>
@@ -275,7 +271,7 @@ export default function DichVuXeDuLichPage() {
                       {vehicle.amenities.map((a) => (
                         <span
                           key={a}
-                          className="text-[10px] bg-[#F2F4F7] border border-[#E4E7EC] text-[#172236] px-2 py-0.5 rounded-full font-medium"
+                          className="text-[10px] bg-[#F1F5F9] border border-[#CBD5E1] text-[#1E293B] px-2 py-0.5 rounded-full font-semibold"
                         >
                           {vehicle.amenityLabels[a as keyof typeof vehicle.amenityLabels]}
                         </span>
@@ -289,21 +285,22 @@ export default function DichVuXeDuLichPage() {
         </section>
 
         {/* ============================================================
-            FORM ĐẶT XE
+            FORM ĐẶT XE (Nền sáng #F7F6F1)
             ============================================================ */}
-        <section id="dat-xe" className="py-16 sm:py-20 bg-[#F7F6F1] border-t border-[#E4E7EC] scroll-mt-20">
+        <section id="dat-xe" className="py-16 sm:py-20 bg-[#F7F6F1] border-t border-[#CBD5E1] scroll-mt-20">
           <Container>
             <SectionHeading
               eyebrow="ĐẶT XE NGAY"
               title="Nhận báo giá trong vài phút"
               description="Điền thông tin hành trình — chúng tôi sẽ liên hệ xác nhận và báo giá chính xác trong thời gian sớm nhất."
+              darkTheme={false}
             />
             <BookingForm />
           </Container>
         </section>
 
         {/* ============================================================
-            THÔNG TIN LIÊN HỆ
+            THÔNG TIN LIÊN HỆ (Nền tối Navy #172236)
             ============================================================ */}
         <section className="py-12 bg-[#172236]">
           <Container>
@@ -312,8 +309,8 @@ export default function DichVuXeDuLichPage() {
                 <span className="text-white font-bold text-lg">
                   HUECARTOUR – Đặt xe trực tiếp
                 </span>
-                <span className="text-[#94A3B8] text-sm flex items-center gap-1.5 justify-center sm:justify-start">
-                  <MapPin className="w-3.5 h-3.5" />
+                <span className="text-[#CBD5E1] text-sm flex items-center gap-1.5 justify-center sm:justify-start font-medium">
+                  <MapPin className="w-3.5 h-3.5 text-[#38BDF8]" />
                   {huecartourContact.address}
                 </span>
               </div>
@@ -321,7 +318,7 @@ export default function DichVuXeDuLichPage() {
                 <a href={`tel:${huecartourContact.hotlineRaw}`}>
                   <Button
                     variant="secondary"
-                    className="font-bold flex items-center gap-2 w-full sm:w-auto"
+                    className="font-bold flex items-center gap-2 w-full sm:w-auto bg-[#E8B923] text-[#0F172A] hover:bg-[#D1A51B]"
                   >
                     <Phone className="w-4 h-4" />
                     {huecartourContact.hotlineDisplay}
@@ -330,7 +327,7 @@ export default function DichVuXeDuLichPage() {
                 <Link href="/">
                   <Button
                     variant="outline"
-                    className="font-bold flex items-center gap-2 w-full sm:w-auto border-white/20 text-white hover:bg-white/10"
+                    className="font-bold flex items-center gap-2 w-full sm:w-auto border-white/30 text-white hover:bg-white/10"
                   >
                     <ArrowRight className="w-4 h-4" />
                     Auto Spa

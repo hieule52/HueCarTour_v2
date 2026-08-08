@@ -1,6 +1,6 @@
 // ============================================================
 // src/components/tour/TourCard.tsx
-// Thẻ hiển thị thông tin Tour du lịch
+// Thẻ hiển thị thông tin Tour du lịch — High Contrast
 // ============================================================
 
 "use client";
@@ -30,8 +30,8 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
     e.preventDefault(); // Tránh kích hoạt Link bao ngoài
     // Lưu thông tin tour quan tâm vào localStorage để Form đặt xe tự động nạp
     localStorage.setItem("selected_tour_interest", tour.name);
-    
-    // Gửi event để Form đặt xe lắng nghe nếu đang ở cùng trang chủ
+
+    // Gửi event để Form đặt xe lắng nghe nếu đang ở cùng trang
     window.dispatchEvent(new Event("selected_tour_changed"));
 
     const formElement = document.getElementById("dat-xe");
@@ -43,13 +43,13 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
   };
 
   return (
-    <Card className="flex flex-col h-full bg-bg-surface hover:shadow-custom-md">
+    <Card className="flex flex-col h-full bg-white border border-[#E4E7EC] hover:shadow-md transition-shadow">
       <Link href={`/dich-vu-xe-du-lich/${tour.slug}`} className="flex flex-col h-full group">
         {/* Khu vực hình ảnh */}
-        <div className="relative w-full aspect-[4/3] bg-bg-surface-muted overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 text-text-secondary/50 text-xs text-center p-4">
+        <div className="relative w-full aspect-[4/3] bg-[#F2F4F7] overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600 text-xs text-center p-4">
             <div className="flex flex-col items-center gap-1.5">
-              <MapPin className="w-7 h-7 text-primary/30" />
+              <MapPin className="w-7 h-7 text-[#172236]/40" />
               <span className="font-semibold">{tour.shortName || tour.name}</span>
             </div>
           </div>
@@ -66,7 +66,7 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
 
           {/* Badge nhãn lọc tag đầu tiên */}
           {tour.tags.length > 0 && (
-            <Badge variant="primary" className="absolute top-3 left-3 font-semibold uppercase tracking-wider text-[9px]">
+            <Badge variant="primary" className="absolute top-3 left-3 font-bold uppercase tracking-wider text-[9px] bg-[#172236] text-white">
               {tour.tags[0] === "city-tour" ? "City Tour" : "Liên Tỉnh"}
             </Badge>
           )}
@@ -76,20 +76,20 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
         <div className="p-5 flex flex-col flex-grow justify-between gap-4">
           <div className="space-y-3">
             {/* Thời gian & Điểm đón */}
-            <div className="flex items-center gap-3 text-xs text-text-secondary">
+            <div className="flex items-center gap-3 text-xs text-[#475569] font-medium">
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-[#172236] flex-shrink-0" />
                 {tour.duration}
               </span>
             </div>
 
             {/* Tiêu đề dễ quét */}
-            <h3 className="text-base sm:text-lg font-bold text-text-primary group-hover:text-primary transition-colors leading-snug line-clamp-2">
+            <h3 className="text-base sm:text-lg font-extrabold text-[#0F172A] group-hover:text-[#172236] transition-colors leading-snug line-clamp-2">
               {tour.name}
             </h3>
 
             {/* Mô tả ngắn */}
-            <p className="text-xs sm:text-sm text-text-secondary line-clamp-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#475569] line-clamp-2 leading-relaxed">
               {tour.description}
             </p>
 
@@ -99,13 +99,13 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
                 {displayStops.map((stop, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center text-[10px] font-semibold text-text-primary bg-bg-surface-muted px-2 py-0.5 rounded-custom-sm border border-border-custom/50"
+                    className="inline-flex items-center text-[10px] font-semibold text-[#1E293B] bg-[#F1F5F9] px-2 py-0.5 rounded-custom-sm border border-[#CBD5E1]"
                   >
                     {stop.name}
                   </span>
                 ))}
                 {tour.stops.length > 3 && (
-                  <span className="text-[10px] text-text-secondary font-medium self-center pl-1">
+                  <span className="text-[10px] text-[#475569] font-medium self-center pl-1">
                     +{tour.stops.length - 3} điểm nữa
                   </span>
                 )}
@@ -114,10 +114,10 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
           </div>
 
           {/* Bảng giá và Nút thao tác */}
-          <div className="space-y-3.5 pt-3 border-t border-border-custom">
+          <div className="space-y-3.5 pt-3 border-t border-[#E4E7EC]">
             <div className="flex items-baseline justify-between">
-              <span className="text-xs text-text-secondary">Giá xe riêng từ:</span>
-              <span className="text-base sm:text-lg font-extrabold text-primary">
+              <span className="text-xs text-[#475569] font-medium">Giá xe riêng từ:</span>
+              <span className="text-base sm:text-lg font-extrabold text-[#0F172A]">
                 {minPrice ? formatVnd(minPrice) : "Liên hệ"}
               </span>
             </div>
@@ -127,15 +127,14 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full text-xs font-bold h-9 hover:bg-secondary hover:text-text-on-secondary hover:border-secondary transition-all duration-200"
+                className="w-full text-xs font-bold h-9 border-[#0F172A]/30 text-[#0F172A] hover:bg-[#172236] hover:text-white hover:border-[#172236] transition-all duration-200"
                 onClick={handleQuoteClick}
               >
                 Nhận báo giá
               </Button>
               <div className="w-full">
-                {/* Nút chính dẫn trực tiếp vào trang chi tiết */}
                 <Button
-                  className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1"
+                  className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1 bg-[#172236] text-white hover:bg-[#0F172A]"
                 >
                   Chi tiết
                   <ArrowRight className="w-3.5 h-3.5" />

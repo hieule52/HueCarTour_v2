@@ -39,14 +39,10 @@ export const FloatingContact: React.FC = () => {
     {
       id: "messenger",
       label: "Messenger",
-      href: "messengerUrl" in contact ? contact.messengerUrl : "REPLACE_WITH_MESSENGER_URL",
+      href: contact.messengerUrl,
       icon: <MessageSquare className="w-5 h-5" />,
       color: "bg-indigo-600 hover:bg-indigo-700 text-white",
-      disabled:
-        !("messengerUrl" in contact) ||
-        isPlaceholderUrl(
-          "messengerUrl" in contact ? contact.messengerUrl : "REPLACE"
-        ),
+      disabled: isPlaceholderUrl(contact.messengerUrl),
     },
     {
       id: "maps",

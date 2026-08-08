@@ -51,10 +51,40 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/assets/images/brand/autospa_iconTab.png", type: "image/png" },
+      {
+        url: "/assets/images/brand/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/brand/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/brand/favicon-48x48.png",
+        sizes: "48x48",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/brand/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/assets/images/brand/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
     ],
-    shortcut: "/assets/images/brand/autospa_iconTab.png",
-    apple: "/assets/images/brand/autospa_iconTab.png",
+    shortcut: "/assets/images/brand/favicon-32x32.png",
+    apple: [
+      {
+        url: "/assets/images/brand/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
   },
   openGraph: {
     title: "Tiến Quốc Auto Spa | Bảo dưỡng, sửa chữa và chăm sóc ô tô tại Huế",
