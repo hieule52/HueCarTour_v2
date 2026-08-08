@@ -16,7 +16,7 @@ export const siteConfig: SiteConfig = {
   slogan: "Xe đẹp hơn - Bền lâu hơn - An tâm trên mọi hành trình",
   description:
     "Tiến Quốc Auto Spa cung cấp dịch vụ bảo dưỡng, sửa chữa, vệ sinh nội thất, đánh bóng, phủ ceramic và chăm sóc ô tô tại Huế. Liên hệ 036 448 3597 để được kiểm tra và tư vấn.",
-  url: "https://huecartours.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://huecartours.com",
   locale: "vi_VN",
   ogImage: "/assets/images/seo/tien-quoc-auto-spa-og.webp",
 };
