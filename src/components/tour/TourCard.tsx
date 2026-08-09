@@ -1,6 +1,6 @@
 // ============================================================
 // src/components/tour/TourCard.tsx
-// Thẻ hiển thị thông tin Tour du lịch — High Contrast
+// Thẻ hiển thị thông tin Tour du lịch — Theme-aware (Auto Spa & Car Tour Sync)
 // ============================================================
 
 "use client";
@@ -20,18 +20,12 @@ interface TourCardProps {
 }
 
 export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
-  // Lấy giá thấp nhất (thường là xe 4 chỗ) để hiển thị kiểu "chỉ từ..."
   const minPrice = tour.pricing.car_4 || tour.pricing.car_7 || tour.pricing.car_16;
-
-  // Lấy các điểm tham quan chính (tối đa 3 điểm) hiển thị tóm gọn
   const displayStops = tour.stops.slice(0, 3);
 
   const handleQuoteClick = (e: React.MouseEvent) => {
-    e.preventDefault(); // Tránh kích hoạt Link bao ngoài
-    // Lưu thông tin tour quan tâm vào localStorage để Form đặt xe tự động nạp
+    e.preventDefault();
     localStorage.setItem("selected_tour_interest", tour.name);
-
-    // Gửi event để Form đặt xe lắng nghe nếu đang ở cùng trang
     window.dispatchEvent(new Event("selected_tour_changed"));
 
     const formElement = document.getElementById("dat-xe");
@@ -43,13 +37,13 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
   };
 
   return (
-    <Card className="flex flex-col h-full bg-white border border-[#E4E7EC] hover:shadow-md transition-shadow">
+    <Card className="flex flex-col h-full bg-white dark:bg-[#0E1726] border border-slate-200 dark:border-slate-800 hover:border-[#0EA5E9] dark:hover:border-[#38BDF8] transition-all duration-200">
       <Link href={`/dich-vu-xe-du-lich/${tour.slug}`} className="flex flex-col h-full group">
         {/* Khu vực hình ảnh */}
-        <div className="relative w-full aspect-[4/3] bg-[#F2F4F7] overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600 text-xs text-center p-4">
+        <div className="relative w-full aspect-[4/3] bg-slate-100 dark:bg-[#07101F] overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs text-center p-4">
             <div className="flex flex-col items-center gap-1.5">
-              <MapPin className="w-7 h-7 text-[#172236]/40" />
+              <MapPin className="w-7 h-7 opacity-40 text-[#0EA5E9] dark:text-[#38BDF8]" />
               <span className="font-semibold">{tour.shortName || tour.name}</span>
             </div>
           </div>
@@ -64,9 +58,9 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
             }}
           />
 
-          {/* Badge nhãn lọc tag đầu tiên */}
+          {/* Badge tag */}
           {tour.tags.length > 0 && (
-            <Badge variant="primary" className="absolute top-3 left-3 font-bold uppercase tracking-wider text-[9px] bg-[#172236] text-white">
+            <Badge variant="primary" className="absolute top-3 left-3 font-bold uppercase tracking-wider text-[9px] bg-[#0F172A] dark:bg-[#1E293B] text-white dark:text-[#38BDF8] border border-transparent dark:border-slate-700">
               {tour.tags[0] === "city-tour" ? "City Tour" : "Liên Tỉnh"}
             </Badge>
           )}
@@ -75,37 +69,37 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
         {/* Nội dung text */}
         <div className="p-5 flex flex-col flex-grow justify-between gap-4">
           <div className="space-y-3">
-            {/* Thời gian & Điểm đón */}
-            <div className="flex items-center gap-3 text-xs text-[#475569] font-medium">
+            {/* Thời gian */}
+            <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400 font-medium">
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-[#172236] flex-shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-[#0EA5E9] dark:text-[#38BDF8] flex-shrink-0" />
                 {tour.duration}
               </span>
             </div>
 
-            {/* Tiêu đề dễ quét */}
-            <h3 className="text-base sm:text-lg font-extrabold text-[#0F172A] group-hover:text-[#172236] transition-colors leading-snug line-clamp-2">
+            {/* Tiêu đề */}
+            <h3 className="text-base sm:text-lg font-extrabold text-[#0F172A] dark:text-[#F8FAFC] group-hover:text-[#0EA5E9] dark:group-hover:text-[#38BDF8] transition-colors leading-snug line-clamp-2">
               {tour.name}
             </h3>
 
             {/* Mô tả ngắn */}
-            <p className="text-xs sm:text-sm text-[#475569] line-clamp-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-[#CBD5E1] line-clamp-2 leading-relaxed">
               {tour.description}
             </p>
 
-            {/* Các điểm dừng tiêu biểu */}
+            {/* Điểm dừng */}
             {displayStops.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {displayStops.map((stop, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center text-[10px] font-semibold text-[#1E293B] bg-[#F1F5F9] px-2 py-0.5 rounded-custom-sm border border-[#CBD5E1]"
+                    className="inline-flex items-center text-[10px] font-semibold text-slate-700 dark:text-[#CBD5E1] bg-slate-100 dark:bg-[#07101F] px-2 py-0.5 rounded-custom-sm border border-slate-200 dark:border-slate-800"
                   >
                     {stop.name}
                   </span>
                 ))}
                 {tour.stops.length > 3 && (
-                  <span className="text-[10px] text-[#475569] font-medium self-center pl-1">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium self-center pl-1">
                     +{tour.stops.length - 3} điểm nữa
                   </span>
                 )}
@@ -114,27 +108,27 @@ export const TourCard: React.FC<TourCardProps> = ({ tour }) => {
           </div>
 
           {/* Bảng giá và Nút thao tác */}
-          <div className="space-y-3.5 pt-3 border-t border-[#E4E7EC]">
+          <div className="space-y-3.5 pt-3 border-t border-slate-200 dark:border-slate-800">
             <div className="flex items-baseline justify-between">
-              <span className="text-xs text-[#475569] font-medium">Giá xe riêng từ:</span>
-              <span className="text-base sm:text-lg font-extrabold text-[#0F172A]">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Giá xe riêng từ:</span>
+              <span className="text-base sm:text-lg font-extrabold text-[#0F172A] dark:text-[#38BDF8]">
                 {minPrice ? formatVnd(minPrice) : "Liên hệ"}
               </span>
             </div>
 
-            {/* 2 Nút CTA theo tiêu chuẩn */}
+            {/* 2 Nút CTA */}
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full text-xs font-bold h-9 border-[#0F172A]/30 text-[#0F172A] hover:bg-[#172236] hover:text-white hover:border-[#172236] transition-all duration-200"
+                className="w-full text-xs font-bold h-9 border-slate-300 dark:border-slate-700 text-[#0F172A] dark:text-[#F8FAFC] hover:bg-[#0EA5E9] dark:hover:bg-[#38BDF8] hover:text-white dark:hover:text-[#020617] hover:border-[#0EA5E9] dark:hover:border-[#38BDF8] transition-all duration-200"
                 onClick={handleQuoteClick}
               >
                 Nhận báo giá
               </Button>
               <div className="w-full">
                 <Button
-                  className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1 bg-[#172236] text-white hover:bg-[#0F172A]"
+                  className="w-full text-xs font-bold h-9 flex items-center justify-center gap-1 bg-[#0284C7] dark:bg-[#38BDF8] text-white dark:text-[#020617] hover:bg-[#0284C7] dark:hover:bg-[#60A5FA]"
                 >
                   Chi tiết
                   <ArrowRight className="w-3.5 h-3.5" />

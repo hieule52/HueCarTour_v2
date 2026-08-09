@@ -1,33 +1,33 @@
 // ============================================================
 // src/app/dich-vu/[slug]/page.tsx
-// Trang chi tiết dịch vụ Auto Spa
+// Trang chi tiết dịch vụ Tiến Quốc Auto Spa — Theme-aware
 // ============================================================
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import {
   CheckCircle,
   ArrowRight,
   Phone,
-  CalendarCheck,
-  Home,
-  ChevronRight,
   Wrench,
   Sparkles,
   ShieldCheck,
+  UserCheck,
   Receipt,
   Award,
   Car,
   Truck,
   Settings,
   Star,
+  CalendarCheck,
 } from "lucide-react";
 import { Container } from "@/components/common/Container";
-import { Button } from "@/components/common/Button";
 import { FaqAccordion } from "@/components/common/FaqAccordion";
 import { JsonLd } from "@/components/common/JsonLd";
+import { Button } from "@/components/common/Button";
+import { Breadcrumb } from "@/components/common/Breadcrumb";
 import {
   getServiceBySlug,
   getAllServices,
@@ -35,47 +35,28 @@ import {
 } from "@/data/autospa";
 import { autospaContact, siteConfig } from "@/data/site";
 
-// ============================================================
-// Static params
-// ============================================================
-export async function generateStaticParams() {
-  const services = getAllServices();
-  return services.map((s) => ({ slug: s.slug }));
+interface Props {
+  params: Promise<{ slug: string }>;
 }
 
-// ============================================================
-// Metadata
-// ============================================================
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
+  if (!service) return { title: "Dịch vụ không tồn tại" };
 
-  if (!service) {
-    return {
-      title: "Dịch vụ không tồn tại | Tiến Quốc Auto Spa",
-    };
-  }
+  const title = `${service.name} Tại Huế | Tiến Quốc Auto Spa`;
+  const description = service.description;
 
   return {
-    title: `${service.name} Tại Huế | Tiến Quốc Auto Spa`,
-    description:
-      service.longDescription ?? service.description,
+    title,
+    description,
     alternates: {
-      canonical: `${siteConfig.url}/dich-vu/${service.slug}`,
+      canonical: `${siteConfig.url}/dich-vu/${slug}`,
     },
     openGraph: {
-      title: `${service.name} | Tiến Quốc Auto Spa Huế`,
-      description: service.description,
-      images: [
-        {
-          url: service.imageSrc,
-          alt: service.imageAlt,
-        },
-      ],
+      title,
+      description,
+      images: [{ url: service.imageSrc, alt: service.imageAlt }],
     },
   };
 }
@@ -84,6 +65,7 @@ const iconMap: Record<string, React.ElementType> = {
   wrench: Wrench,
   sparkles: Sparkles,
   "shield-check": ShieldCheck,
+  "user-check": UserCheck,
   receipt: Receipt,
   award: Award,
   car: Car,
@@ -100,14 +82,7 @@ const iconMap: Record<string, React.ElementType> = {
   music: Star,
 };
 
-// ============================================================
-// Page
-// ============================================================
-export default async function ServiceDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ServiceDetailPage({ params }: Props) {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
 
@@ -115,7 +90,6 @@ export default async function ServiceDetailPage({
 
   const ServiceIcon = iconMap[service.iconName] ?? Wrench;
 
-  // Related services — same featured group, exclude current
   const allServices = getAllServices();
   const related = allServices
     .filter((s) => s.slug !== slug && s.featured)
@@ -167,59 +141,42 @@ export default async function ServiceDetailPage({
     <>
       <JsonLd data={jsonLdData} />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col" style={{ backgroundColor: "var(--page-bg)", color: "var(--page-text)" }}>
         {/* Breadcrumb */}
-        <nav
-          aria-label="Điều hướng phân cấp"
-          className="border-b border-slate-800 bg-[#07111F]"
-        >
-          <Container>
-            <ol className="flex items-center gap-1.5 py-3 text-xs text-slate-500 flex-wrap">
-              <li>
-                <Link
-                  href="/"
-                  className="flex items-center gap-1 hover:text-[#00C8FF] transition-colors"
-                >
-                  <Home className="w-3.5 h-3.5" />
-                  Trang chủ
-                </Link>
-              </li>
-              <li><ChevronRight className="w-3.5 h-3.5" /></li>
-              <li>
-                <Link href="/dich-vu" className="hover:text-[#00C8FF] transition-colors">
-                  Dịch vụ
-                </Link>
-              </li>
-              <li><ChevronRight className="w-3.5 h-3.5" /></li>
-              <li className="text-white font-medium" aria-current="page">
-                {service.name}
-              </li>
-            </ol>
-          </Container>
-        </nav>
+        <Breadcrumb
+          items={[
+            { label: "Dịch vụ", href: "/dich-vu" },
+            { label: service.name },
+          ]}
+        />
 
         {/* Hero */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden py-12 sm:py-16" style={{ backgroundColor: "var(--page-bg)" }}>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(22,139,255,0.1)_0%,transparent_60%)] pointer-events-none" />
-          <Container className="relative z-10 py-12 sm:py-16">
+          <Container className="relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
               {/* Text */}
               <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-custom-lg bg-[#168BFF]/15 flex items-center justify-center text-[#00C8FF]">
+                  <div
+                    className="w-12 h-12 rounded-custom-lg flex items-center justify-center"
+                    style={{
+                      backgroundColor: "color-mix(in srgb, var(--page-primary) 15%, transparent)",
+                      color: "var(--page-primary-alt)"
+                    }}
+                  >
                     <ServiceIcon className="w-6 h-6" />
                   </div>
-                  <span className="text-xs font-bold tracking-widest text-[#00C8FF] uppercase">
+                  <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "var(--page-primary-alt)" }}>
                     Tiến Quốc Auto Spa
                   </span>
                 </div>
 
-                {/* H1 — duy nhất */}
-                <h1 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+                <h1 className="text-2xl sm:text-4xl font-extrabold leading-tight" style={{ color: "var(--page-text)" }}>
                   {service.name}
                 </h1>
 
-                <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                <p className="text-sm sm:text-base leading-relaxed font-normal" style={{ color: "var(--page-text-muted)" }}>
                   {service.longDescription ?? service.description}
                 </p>
 
@@ -227,7 +184,8 @@ export default async function ServiceDetailPage({
                   <Link href="/#dat-lich">
                     <Button
                       variant="secondary"
-                      className="font-bold flex items-center gap-2 w-full sm:w-auto"
+                      className="font-bold flex items-center justify-center gap-2 w-full sm:w-auto glow-primary"
+                      style={{ backgroundColor: "var(--page-primary-alt)", color: "var(--page-bg)" }}
                     >
                       <CalendarCheck className="w-4 h-4" />
                       Đặt lịch dịch vụ này
@@ -236,7 +194,7 @@ export default async function ServiceDetailPage({
                   <a href={`tel:${autospaContact.hotlineRaw}`}>
                     <Button
                       variant="outline"
-                      className="font-bold flex items-center gap-2 w-full sm:w-auto border-slate-700 text-slate-300 hover:border-[#168BFF] hover:text-[#00C8FF]"
+                      className="font-bold flex items-center justify-center gap-2 w-full sm:w-auto"
                     >
                       <Phone className="w-4 h-4" />
                       Gọi {autospaContact.hotlineDisplay}
@@ -244,17 +202,27 @@ export default async function ServiceDetailPage({
                   </a>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500 bg-[#07111F] border border-slate-800 rounded-custom-md px-4 py-3">
-                  <Receipt className="w-4 h-4 text-[#168BFF] flex-shrink-0" />
+                <div
+                  className="flex items-center gap-2 text-xs rounded-custom-md px-4 py-3 border"
+                  style={{
+                    backgroundColor: "var(--page-surface-2)",
+                    borderColor: "var(--page-border)",
+                    color: "var(--page-text-muted)"
+                  }}
+                >
+                  <Receipt className="w-4 h-4 flex-shrink-0" style={{ color: "var(--page-primary-alt)" }} />
                   <span>
-                    <strong className="text-white">Báo giá: </strong>
+                    <strong style={{ color: "var(--page-text)" }}>Báo giá: </strong>
                     {service.priceLabel} — Kiểm tra xe trước khi xác nhận giá.
                   </span>
                 </div>
               </div>
 
               {/* Image */}
-              <div className="relative aspect-video rounded-custom-lg overflow-hidden border border-border-custom">
+              <div
+                className="relative aspect-video rounded-custom-lg overflow-hidden border"
+                style={{ borderColor: "var(--page-border)" }}
+              >
                 <Image
                   src={service.imageSrc}
                   alt={service.imageAlt}
@@ -269,19 +237,26 @@ export default async function ServiceDetailPage({
         </section>
 
         {/* Service Items */}
-        <section className="py-14 bg-[#07111F] border-y border-slate-800">
+        <section
+          className="py-14 border-y"
+          style={{ backgroundColor: "var(--page-surface)", borderColor: "var(--page-border)" }}
+        >
           <Container>
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-8" style={{ color: "var(--page-text)" }}>
               Các hạng mục thực hiện
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {service.items.map((item) => (
                 <div
                   key={item}
-                  className="flex items-start gap-3 p-4 bg-[#050A12]/60 border border-slate-800 rounded-custom-md"
+                  className="flex items-start gap-3 p-4 rounded-custom-md border"
+                  style={{
+                    backgroundColor: "var(--page-bg)",
+                    borderColor: "var(--page-border)"
+                  }}
                 >
-                  <CheckCircle className="w-5 h-5 text-[#168BFF] flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-slate-300 leading-relaxed">{item}</span>
+                  <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: "var(--page-primary-alt)" }} />
+                  <span className="text-sm leading-relaxed" style={{ color: "var(--page-text-muted)" }}>{item}</span>
                 </div>
               ))}
             </div>
@@ -289,22 +264,26 @@ export default async function ServiceDetailPage({
         </section>
 
         {/* Process */}
-        <section className="py-14">
+        <section className="py-14" style={{ backgroundColor: "var(--page-bg)" }}>
           <Container>
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-8" style={{ color: "var(--page-text)" }}>
               Quy trình thực hiện
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {autospaProcess.map((step) => (
                 <div
                   key={step.step}
-                  className="p-4 bg-bg-surface-2 border border-border-custom rounded-custom-md flex flex-col gap-2"
+                  className="p-4 rounded-custom-md border flex flex-col gap-2"
+                  style={{
+                    backgroundColor: "var(--page-surface-2)",
+                    borderColor: "var(--page-border)"
+                  }}
                 >
                   <span className="text-2xl font-extrabold text-gradient-blue">
                     {String(step.step).padStart(2, "0")}
                   </span>
-                  <h3 className="text-sm font-bold text-white">{step.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <h3 className="text-sm font-bold" style={{ color: "var(--page-text)" }}>{step.title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: "var(--page-text-muted)" }}>
                     {step.description}
                   </p>
                 </div>
@@ -314,14 +293,17 @@ export default async function ServiceDetailPage({
         </section>
 
         {/* CTA Banner */}
-        <section className="py-14 bg-gradient-to-r from-[#07111F] to-[#0E1726] border-y border-slate-800">
+        <section
+          className="py-14 border-y"
+          style={{ backgroundColor: "var(--page-surface)", borderColor: "var(--page-border)" }}
+        >
           <Container>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex flex-col gap-2">
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold" style={{ color: "var(--page-text)" }}>
                   Sẵn sàng chăm sóc xe?
                 </h3>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm" style={{ color: "var(--page-text-muted)" }}>
                   Đặt lịch ngay hoặc gọi để được tư vấn miễn phí.
                 </p>
               </div>
@@ -329,7 +311,8 @@ export default async function ServiceDetailPage({
                 <Link href="/#dat-lich">
                   <Button
                     variant="secondary"
-                    className="font-bold flex items-center gap-2 w-full sm:w-auto"
+                    className="font-bold flex items-center justify-center gap-2 w-full sm:w-auto"
+                    style={{ backgroundColor: "var(--page-primary-alt)", color: "var(--page-bg)" }}
                   >
                     <CalendarCheck className="w-4 h-4" />
                     Đặt lịch
@@ -338,7 +321,7 @@ export default async function ServiceDetailPage({
                 <a href={`tel:${autospaContact.hotlineRaw}`}>
                   <Button
                     variant="outline"
-                    className="font-bold flex items-center gap-2 w-full sm:w-auto border-slate-700 text-slate-300 hover:border-[#168BFF] hover:text-[#00C8FF]"
+                    className="font-bold flex items-center justify-center gap-2 w-full sm:w-auto"
                   >
                     <Phone className="w-4 h-4" />
                     {autospaContact.hotlineDisplay}
@@ -350,9 +333,9 @@ export default async function ServiceDetailPage({
         </section>
 
         {/* FAQ */}
-        <section className="py-14">
+        <section className="py-14" style={{ backgroundColor: "var(--page-bg)" }}>
           <Container>
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-8" style={{ color: "var(--page-text)" }}>
               Câu hỏi thường gặp về dịch vụ này
             </h2>
             <FaqAccordion
@@ -384,15 +367,19 @@ export default async function ServiceDetailPage({
 
         {/* Related Services */}
         {related.length > 0 && (
-          <section className="py-14 bg-[#07111F] border-t border-slate-800">
+          <section
+            className="py-14 border-t"
+            style={{ backgroundColor: "var(--page-surface)", borderColor: "var(--page-border)" }}
+          >
             <Container>
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                <h2 className="text-xl sm:text-2xl font-bold" style={{ color: "var(--page-text)" }}>
                   Dịch vụ liên quan
                 </h2>
                 <Link
                   href="/dich-vu"
-                  className="text-sm text-[#168BFF] hover:text-[#00C8FF] transition-colors flex items-center gap-1"
+                  className="text-sm font-semibold transition-colors flex items-center gap-1"
+                  style={{ color: "var(--page-primary-alt)" }}
                 >
                   Xem tất cả
                   <ArrowRight className="w-4 h-4" />
@@ -406,20 +393,33 @@ export default async function ServiceDetailPage({
                     <Link
                       key={s.id}
                       href={`/dich-vu/${s.slug}`}
-                      className="group p-5 bg-[#050A12]/60 border border-slate-800 rounded-custom-lg hover:border-[#168BFF]/40 transition-all"
+                      className="group p-5 rounded-custom-lg border transition-all duration-200"
+                      style={{
+                        backgroundColor: "var(--page-bg)",
+                        borderColor: "var(--page-border)"
+                      }}
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 rounded-custom-md bg-[#168BFF]/15 flex items-center justify-center text-[#00C8FF]">
+                        <div
+                          className="w-9 h-9 rounded-custom-md flex items-center justify-center"
+                          style={{
+                            backgroundColor: "color-mix(in srgb, var(--page-primary) 15%, transparent)",
+                            color: "var(--page-primary-alt)"
+                          }}
+                        >
                           <RelIcon className="w-4 h-4" />
                         </div>
-                        <h3 className="text-sm font-bold text-white group-hover:text-[#00C8FF] transition-colors leading-tight">
+                        <h3
+                          className="text-sm font-bold transition-colors leading-tight"
+                          style={{ color: "var(--page-text)" }}
+                        >
                           {s.name}
                         </h3>
                       </div>
-                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">
+                      <p className="text-xs leading-relaxed line-clamp-2" style={{ color: "var(--page-text-muted)" }}>
                         {s.description}
                       </p>
-                      <div className="flex items-center gap-1 mt-3 text-xs text-[#168BFF]">
+                      <div className="flex items-center gap-1 mt-3 text-xs font-semibold" style={{ color: "var(--page-primary-alt)" }}>
                         Xem chi tiết <ArrowRight className="w-3 h-3" />
                       </div>
                     </Link>

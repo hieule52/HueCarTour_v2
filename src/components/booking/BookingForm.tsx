@@ -1,6 +1,6 @@
 // ============================================================
 // src/components/booking/BookingForm.tsx
-// Biểu mẫu đặt xe du lịch / yêu cầu báo giá chuyên nghiệp — High Contrast
+// Biểu mẫu đặt xe du lịch — Theme-aware (Auto Spa & Car Tour Sync)
 // ============================================================
 
 "use client";
@@ -8,22 +8,34 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Clock, User, Phone, MapPin, Users, AlertCircle, Car } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  User,
+  Phone,
+  Car,
+  MapPin,
+  Users,
+  AlertCircle,
+} from "lucide-react";
 import { bookingFormSchema, type BookingFormData } from "@/schemas/booking.schema";
-import { vehicles } from "@/data/huecartour";
+import { tours, vehicles } from "@/data/huecartour";
 import { Button } from "../common/Button";
 import { SuccessMessage } from "../common/SuccessMessage";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
+
+const tourOptions = tours.map((t) => t.name);
 
 export const BookingForm: React.FC = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { isDark } = useTheme();
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<BookingFormData>({
@@ -35,37 +47,23 @@ export const BookingForm: React.FC = () => {
       destination: "",
       date: new Date().toISOString().split("T")[0],
       time: "08:00",
-      vehicleType: "car_4",
-      passengers: 1,
-      tourInterest: "",
+      vehicleType: vehicles[0]?.name || "Xe 4 chỗ",
+      passengers: 2,
+      tourInterest: tourOptions[0] || "",
       note: "",
-      website_url: "", // Honeypot field (tránh Chrome Autofill tự điền)
+      website_url: "",
     },
   });
 
-  // Theo dõi loại xe đã chọn để gợi ý số lượng hành khách tương ứng
-  const selectedVehicle = watch("vehicleType");
-
-  useEffect(() => {
-    // Tự động đồng bộ số hành khách tối đa gợi ý khi đổi xe
-    const veh = vehicles.find((v) => v.id === selectedVehicle);
-    if (veh) {
-      setValue("passengers", veh.maxPassengers);
-    }
-  }, [selectedVehicle, setValue]);
-
-  // Đọc tour quan tâm từ localStorage nếu khách bấm "Nhận báo giá" từ card
   useEffect(() => {
     const handleTourChange = () => {
-      const selectedTour = localStorage.getItem("selected_tour_interest");
-      if (selectedTour) {
-        setValue("tourInterest", selectedTour);
-        setValue("destination", selectedTour); // Đặt luôn điểm đến là tên tour
-        localStorage.removeItem("selected_tour_interest");
+      const savedTour = localStorage.getItem("selected_tour_interest");
+      if (savedTour && tourOptions.includes(savedTour)) {
+        setValue("tourInterest", savedTour);
       }
     };
 
-    handleTourChange(); // Kiểm tra ngay khi mount
+    handleTourChange();
     window.addEventListener("selected_tour_changed", handleTourChange);
     return () => {
       window.removeEventListener("selected_tour_changed", handleTourChange);
@@ -90,11 +88,10 @@ export const BookingForm: React.FC = () => {
         );
       }
 
-      // Chỉ chuyển sang success state khi email đã thực sự gửi thành công
       setIsSuccess(true);
       reset();
+      localStorage.removeItem("selected_tour_interest");
     } catch (err: unknown) {
-      // Khi thất bại: Giữ nguyên toàn bộ dữ liệu khách đã nhập, không reset form
       const errMsg =
         err instanceof Error
           ? err.message
@@ -112,17 +109,27 @@ export const BookingForm: React.FC = () => {
 
   return (
     <div
-      className="w-full bg-white border border-[#CBD5E1] rounded-custom-lg shadow-sm p-6 sm:p-8"
+      className={cn(
+        "w-full border rounded-custom-lg shadow-xl p-6 sm:p-8 transition-colors duration-300",
+        isDark
+          ? "bg-[#0E1726] border-slate-800"
+          : "bg-white border-gray-200"
+      )}
       id="dat-xe-form"
     >
-      <h3 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] mb-6 text-center">
+      <h3
+        className={cn(
+          "text-xl sm:text-2xl font-extrabold mb-6 text-center",
+          isDark ? "text-[#F8FAFC]" : "text-gray-900"
+        )}
+      >
         Yêu Cầu Báo Giá & Đặt Xe Du Lịch
       </h3>
 
       <div aria-live="polite">
         {apiError && (
-          <div className="mb-6 p-4 rounded-custom-md bg-red-50 border border-red-200 text-red-700 text-sm flex gap-2.5">
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-600" />
+          <div className="mb-6 p-4 rounded-custom-md bg-red-950/40 border border-red-800 text-red-300 text-sm flex gap-2.5">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-400" />
             <span>{apiError}</span>
           </div>
         )}
@@ -134,16 +141,15 @@ export const BookingForm: React.FC = () => {
           onReset={handleResetForm}
         />
       ) : (
-        // Form nhập liệu
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Honeypot field (hidden from view) */}
+          {/* Honeypot field (hidden) */}
           <div
             className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden"
             aria-hidden="true"
           >
-            <label htmlFor="website_url_booking">Website</label>
+            <label htmlFor="website_url_tour">Website</label>
             <input
-              id="website_url_booking"
+              id="website_url_tour"
               type="text"
               tabIndex={-1}
               autoComplete="off"
@@ -156,23 +162,29 @@ export const BookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="fullName"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <User className="w-4 h-4 text-[#172236]" />
-                Họ và tên <span className="text-red-600">*</span>
+                <User className="w-4 h-4 text-[#38BDF8]" />
+                Họ và tên <span className="text-red-400">*</span>
               </label>
               <input
                 id="fullName"
                 type="text"
                 placeholder="Nhập họ và tên"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.fullName ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.fullName && "border-red-500"
                 )}
                 {...register("fullName")}
               />
               {errors.fullName && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.fullName.message}
                 </p>
               )}
@@ -181,24 +193,106 @@ export const BookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="phone"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <Phone className="w-4 h-4 text-[#172236]" />
-                Số điện thoại / Zalo <span className="text-red-600">*</span>
+                <Phone className="w-4 h-4 text-[#38BDF8]" />
+                Số điện thoại / Zalo <span className="text-red-400">*</span>
               </label>
               <input
                 id="phone"
                 type="tel"
                 placeholder="Ví dụ: 0905123456"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.phone ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.phone && "border-red-500"
                 )}
                 {...register("phone")}
               />
               {errors.phone && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.phone.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Tuyến xe / Tour & Loại xe */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label
+                htmlFor="tourInterest"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
+              >
+                <MapPin className="w-4 h-4 text-[#38BDF8]" />
+                Tuyến xe / Tour quan tâm
+              </label>
+              <select
+                id="tourInterest"
+                className={cn(
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.tourInterest && "border-red-500"
+                )}
+                {...register("tourInterest")}
+              >
+                {tourOptions.map((opt) => (
+                  <option
+                    key={opt}
+                    value={opt}
+                    className={isDark ? "bg-[#050A12] text-[#F8FAFC]" : "bg-white text-gray-900"}
+                  >
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="vehicleType"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
+              >
+                <Car className="w-4 h-4 text-[#38BDF8]" />
+                Loại xe <span className="text-red-400">*</span>
+              </label>
+              <select
+                id="vehicleType"
+                className={cn(
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.vehicleType && "border-red-500"
+                )}
+                {...register("vehicleType")}
+              >
+                {vehicles.map((v) => (
+                  <option
+                    key={v.id}
+                    value={v.name}
+                    className={isDark ? "bg-[#050A12] text-[#F8FAFC]" : "bg-white text-gray-900"}
+                  >
+                    {v.name} ({v.type})
+                  </option>
+                ))}
+              </select>
+              {errors.vehicleType && (
+                <p className="text-[11px] font-semibold text-red-400">
+                  {errors.vehicleType.message}
                 </p>
               )}
             </div>
@@ -209,23 +303,29 @@ export const BookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="pickupPoint"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <MapPin className="w-4 h-4 text-[#172236]" />
-                Điểm đón <span className="text-red-600">*</span>
+                <MapPin className="w-4 h-4 text-[#38BDF8]" />
+                Điểm đón <span className="text-red-400">*</span>
               </label>
               <input
                 id="pickupPoint"
                 type="text"
-                placeholder="Ví dụ: Khách sạn hoặc Sân bay Phú Bài"
+                placeholder="Ví dụ: Sân bay Phú Bài / Khách sạn Silk Path Huế"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.pickupPoint ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.pickupPoint && "border-red-500"
                 )}
                 {...register("pickupPoint")}
               />
               {errors.pickupPoint && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.pickupPoint.message}
                 </p>
               )}
@@ -234,50 +334,62 @@ export const BookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="destination"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <MapPin className="w-4 h-4 text-[#172236]" />
-                Điểm đến / Lộ trình <span className="text-red-600">*</span>
+                <MapPin className="w-4 h-4 text-[#38BDF8]" />
+                Điểm đến <span className="text-red-400">*</span>
               </label>
               <input
                 id="destination"
                 type="text"
-                placeholder="Ví dụ: Đà Nẵng, Lăng Cô hoặc City Tour"
+                placeholder="Ví dụ: Trung tâm Huế / Khách sạn tại Hội An"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.destination ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.destination && "border-red-500"
                 )}
                 {...register("destination")}
               />
               {errors.destination && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.destination.message}
                 </p>
               )}
             </div>
           </div>
 
-          {/* Ngày đi & Giờ đón */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Ngày đi, Giờ đón & Số hành khách */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <label
                 htmlFor="date"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <Calendar className="w-4 h-4 text-[#172236]" />
-                Ngày đi <span className="text-red-600">*</span>
+                <Calendar className="w-4 h-4 text-[#38BDF8]" />
+                Ngày đi <span className="text-red-400">*</span>
               </label>
               <input
                 id="date"
                 type="date"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.date ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.date && "border-red-500"
                 )}
                 {...register("date")}
               />
               {errors.date && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.date.message}
                 </p>
               )}
@@ -286,54 +398,29 @@ export const BookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="time"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <Clock className="w-4 h-4 text-[#172236]" />
-                Giờ đón <span className="text-red-600">*</span>
+                <Clock className="w-4 h-4 text-[#38BDF8]" />
+                Giờ đón <span className="text-red-400">*</span>
               </label>
               <input
                 id="time"
                 type="time"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.time ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.time && "border-red-500"
                 )}
                 {...register("time")}
               />
               {errors.time && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.time.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Loại xe & Số hành khách */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label
-                htmlFor="vehicleType"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
-              >
-                <Car className="w-4 h-4 text-[#172236]" />
-                Loại xe yêu cầu <span className="text-red-600">*</span>
-              </label>
-              <select
-                id="vehicleType"
-                className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] border-[#CBD5E1] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]"
-                )}
-                {...register("vehicleType")}
-              >
-                {vehicles.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name} ({v.type})
-                  </option>
-                ))}
-              </select>
-              {errors.vehicleType && (
-                <p className="text-[11px] font-semibold text-red-600">
-                  {errors.vehicleType.message}
                 </p>
               )}
             </div>
@@ -341,76 +428,67 @@ export const BookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="passengers"
-                className="text-xs sm:text-sm font-bold text-[#0F172A] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
-                <Users className="w-4 h-4 text-[#172236]" />
-                Số hành khách <span className="text-red-600">*</span>
+                <Users className="w-4 h-4 text-[#38BDF8]" />
+                Số hành khách <span className="text-red-400">*</span>
               </label>
               <input
                 id="passengers"
                 type="number"
                 min={1}
                 max={50}
-                placeholder="Số người đi xe"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#0F172A]",
-                  errors.passengers ? "border-red-500" : "border-[#CBD5E1]"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.passengers && "border-red-500"
                 )}
                 {...register("passengers", { valueAsNumber: true })}
               />
               {errors.passengers && (
-                <p className="text-[11px] font-semibold text-red-600">
+                <p className="text-[11px] font-semibold text-red-400">
                   {errors.passengers.message}
                 </p>
               )}
             </div>
           </div>
 
-          {/* Tour quan tâm (Không bắt buộc) */}
-          <div className="space-y-1.5">
-            <label
-              htmlFor="tourInterest"
-              className="text-xs sm:text-sm font-bold text-[#0F172A]"
-            >
-              Tour bạn quan tâm (nếu có)
-            </label>
-            <input
-              id="tourInterest"
-              type="text"
-              placeholder="Ví dụ: Huế City Tour 3 Điểm"
-              className="w-full h-11 px-3.5 border border-[#CBD5E1] rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none"
-              {...register("tourInterest")}
-            />
-          </div>
-
           {/* Ghi chú thêm */}
           <div className="space-y-1.5">
             <label
               htmlFor="note"
-              className="text-xs sm:text-sm font-bold text-[#0F172A]"
+              className={cn(
+                "text-xs sm:text-sm font-bold",
+                isDark ? "text-[#F8FAFC]" : "text-gray-700"
+              )}
             >
-              Ghi chú lịch trình hoặc yêu cầu riêng
+              Ghi chú hành trình hoặc yêu cầu đặc biệt (ghế trẻ em, mã chuyến bay...)
             </label>
             <textarea
               id="note"
               rows={3}
-              placeholder="Ví dụ: Có em bé đi cùng, cần ghế trẻ em, hoặc đón lúc sáng sớm..."
-              className="w-full p-3.5 border border-[#CBD5E1] rounded-custom-md text-sm bg-white text-[#0F172A] placeholder:text-[#94A3B8] focus:border-[#0F172A] focus:outline-none resize-none"
+              placeholder="Nhập ghi chú thêm cho tài xế..."
+              className={cn(
+                "w-full p-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none resize-none",
+                isDark
+                  ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                  : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300"
+              )}
               {...register("note")}
             />
-            {errors.note && (
-              <p className="text-[11px] font-semibold text-red-600">
-                {errors.note.message}
-              </p>
-            )}
           </div>
 
           <Button
             type="submit"
             isLoading={isSubmitting}
-            className="w-full font-bold h-12 text-sm sm:text-base mt-2 bg-[#172236] text-white hover:bg-[#0F172A] disabled:opacity-55 disabled:cursor-not-allowed"
+            className="w-full font-bold h-12 text-sm sm:text-base mt-2 bg-[#38BDF8] text-[#020617] hover:bg-[#60A5FA] disabled:opacity-55 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Đang gửi yêu cầu..." : "Tạo nội dung đặt xe & Nhận báo giá"}
+            {isSubmitting ? "Đang gửi yêu cầu..." : "Gửi Yêu Cầu Đặt Xe & Báo Giá"}
           </Button>
         </form>
       )}

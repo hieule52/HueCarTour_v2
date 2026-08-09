@@ -1,6 +1,7 @@
 // ============================================================
 // src/app/dich-vu-xe-du-lich/[slug]/page.tsx
 // Trang chi tiết tuyến xe / tour HUECARTOUR
+// Theme-aware: Đồng bộ 100% thương hiệu TIẾN QUỐC AUTO SPA
 // ============================================================
 
 import type { Metadata } from "next";
@@ -14,8 +15,6 @@ import {
   X,
   ArrowRight,
   Phone,
-  Home,
-  ChevronRight,
   Car,
   Shield,
   CalendarCheck,
@@ -26,6 +25,7 @@ import { JsonLd } from "@/components/common/JsonLd";
 import { Button } from "@/components/common/Button";
 import { TourCard } from "@/components/tour/TourCard";
 import { BookingForm } from "@/components/booking/BookingForm";
+import { Breadcrumb } from "@/components/common/Breadcrumb";
 import {
   getTourBySlug,
   getAllTourSlugs,
@@ -38,16 +38,10 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// ============================================================
-// Static params
-// ============================================================
 export async function generateStaticParams() {
   return getAllTourSlugs();
 }
 
-// ============================================================
-// Metadata
-// ============================================================
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tour = getTourBySlug(slug);
@@ -74,9 +68,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// ============================================================
-// Page
-// ============================================================
 export default async function TourDetailPage({ params }: Props) {
   const { slug } = await params;
   const tour = getTourBySlug(slug);
@@ -122,36 +113,17 @@ export default async function TourDetailPage({ params }: Props) {
     <>
       <JsonLd data={jsonLdData} />
 
-      <div className="theme-huecartour flex flex-col">
+      <div className="flex flex-col" style={{ backgroundColor: "var(--page-bg)", color: "var(--page-text)" }}>
         {/* Breadcrumb */}
-        <nav
-          aria-label="Điều hướng phân cấp"
-          className="border-b border-[#E4E7EC] bg-white"
-        >
-          <Container>
-            <ol className="flex items-center gap-1.5 py-3 text-xs text-[#667085] flex-wrap">
-              <li>
-                <Link href="/" className="flex items-center gap-1 hover:text-[#172236] transition-colors">
-                  <Home className="w-3.5 h-3.5" />
-                  Trang chủ
-                </Link>
-              </li>
-              <li><ChevronRight className="w-3.5 h-3.5" /></li>
-              <li>
-                <Link href="/dich-vu-xe-du-lich" className="hover:text-[#172236] transition-colors">
-                  Xe du lịch
-                </Link>
-              </li>
-              <li><ChevronRight className="w-3.5 h-3.5" /></li>
-              <li className="text-[#101828] font-medium" aria-current="page">
-                {tour.name}
-              </li>
-            </ol>
-          </Container>
-        </nav>
+        <Breadcrumb
+          items={[
+            { label: "Xe du lịch", href: "/dich-vu-xe-du-lich" },
+            { label: tour.name },
+          ]}
+        />
 
         {/* Main Content */}
-        <section className="py-10 sm:py-14 bg-[#F7F6F1]">
+        <section className="py-10 sm:py-14" style={{ backgroundColor: "var(--page-bg)" }}>
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
@@ -160,7 +132,10 @@ export default async function TourDetailPage({ params }: Props) {
 
                 {/* Hero image + title */}
                 <div className="space-y-4">
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-[#E4E7EC] shadow-md bg-[#F2F4F7]">
+                  <div
+                    className="relative aspect-video rounded-2xl overflow-hidden border shadow-md"
+                    style={{ backgroundColor: "var(--page-surface-2)", borderColor: "var(--page-border)" }}
+                  >
                     <Image
                       src={tour.imageSrc}
                       alt={tour.imageAlt}
@@ -175,29 +150,34 @@ export default async function TourDetailPage({ params }: Props) {
                     {tour.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-[10px] font-bold text-[#172236] uppercase bg-[#E8B923]/20 border border-[#E8B923]/40 px-2.5 py-1 rounded-full"
+                        className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border"
+                        style={{
+                          backgroundColor: "color-mix(in srgb, var(--page-primary-alt) 15%, transparent)",
+                          borderColor: "color-mix(in srgb, var(--page-primary-alt) 30%, transparent)",
+                          color: "var(--page-primary-alt)"
+                        }}
                       >
                         {tag.replace("-", " ")}
                       </span>
                     ))}
                   </div>
 
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#101828] leading-tight">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight" style={{ color: "var(--page-text)" }}>
                     {tour.name}
                   </h1>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-[#667085]">
+                  <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm" style={{ color: "var(--page-text-muted)" }}>
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-[#172236]" />
+                      <Clock className="w-4 h-4" style={{ color: "var(--page-primary-alt)" }} />
                       {tour.duration}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <MapPin className="w-4 h-4 text-[#172236]" />
+                      <MapPin className="w-4 h-4" style={{ color: "var(--page-primary-alt)" }} />
                       {tour.pickupPoint}
                     </span>
                   </div>
 
-                  <p className="text-sm sm:text-base text-[#667085] leading-relaxed">
+                  <p className="text-sm sm:text-base leading-relaxed" style={{ color: "var(--page-text-muted)" }}>
                     {tour.longDescription ?? tour.description}
                   </p>
                 </div>
@@ -205,20 +185,30 @@ export default async function TourDetailPage({ params }: Props) {
                 {/* Stops */}
                 {tour.stops.length > 0 && (
                   <div className="space-y-3">
-                    <h2 className="text-lg font-bold text-[#101828]">Các điểm tham quan</h2>
+                    <h2 className="text-lg font-bold" style={{ color: "var(--page-text)" }}>Các điểm tham quan</h2>
                     <div className="space-y-2">
                       {tour.stops.map((stop, idx) => (
                         <div
                           key={idx}
-                          className="flex items-start gap-3 p-4 bg-white border border-[#E4E7EC] rounded-xl"
+                          className="flex items-start gap-3 p-4 rounded-xl border"
+                          style={{
+                            backgroundColor: "var(--page-surface-2)",
+                            borderColor: "var(--page-border)"
+                          }}
                         >
-                          <div className="w-7 h-7 rounded-full bg-[#172236] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+                          <div
+                            className="w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center flex-shrink-0"
+                            style={{
+                              backgroundColor: "var(--page-primary-alt)",
+                              color: "var(--page-bg)"
+                            }}
+                          >
                             {idx + 1}
                           </div>
                           <div>
-                            <span className="text-sm font-bold text-[#101828]">{stop.name}</span>
+                            <span className="text-sm font-bold" style={{ color: "var(--page-text)" }}>{stop.name}</span>
                             {stop.description && (
-                              <p className="text-xs text-[#667085] mt-0.5 leading-relaxed">
+                              <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--page-text-muted)" }}>
                                 {stop.description}
                               </p>
                             )}
@@ -231,22 +221,34 @@ export default async function TourDetailPage({ params }: Props) {
 
                 {/* Included / Excluded */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-5 bg-white border border-[#E4E7EC] rounded-xl space-y-3">
-                    <h3 className="text-sm font-bold text-[#101828]">✅ Đã bao gồm</h3>
+                  <div
+                    className="p-5 rounded-xl space-y-3 border"
+                    style={{
+                      backgroundColor: "var(--page-surface-2)",
+                      borderColor: "var(--page-border)"
+                    }}
+                  >
+                    <h3 className="text-sm font-bold" style={{ color: "var(--page-text)" }}>✅ Đã bao gồm</h3>
                     <ul className="space-y-2">
                       {tour.included.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-xs text-[#667085]">
-                          <Check className="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <li key={item} className="flex items-start gap-2 text-xs" style={{ color: "var(--page-text-muted)" }}>
+                          <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
                           {item}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="p-5 bg-white border border-[#E4E7EC] rounded-xl space-y-3">
-                    <h3 className="text-sm font-bold text-[#101828]">❌ Không bao gồm</h3>
+                  <div
+                    className="p-5 rounded-xl space-y-3 border"
+                    style={{
+                      backgroundColor: "var(--page-surface-2)",
+                      borderColor: "var(--page-border)"
+                    }}
+                  >
+                    <h3 className="text-sm font-bold" style={{ color: "var(--page-text)" }}>❌ Không bao gồm</h3>
                     <ul className="space-y-2">
                       {tour.excluded.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-xs text-[#667085]">
+                        <li key={item} className="flex items-start gap-2 text-xs" style={{ color: "var(--page-text-muted)" }}>
                           <X className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
                           {item}
                         </li>
@@ -258,7 +260,7 @@ export default async function TourDetailPage({ params }: Props) {
                 {/* FAQ */}
                 {tour.faq && tour.faq.length > 0 && (
                   <div className="space-y-4">
-                    <h2 className="text-lg font-bold text-[#101828]">Câu hỏi thường gặp</h2>
+                    <h2 className="text-lg font-bold" style={{ color: "var(--page-text)" }}>Câu hỏi thường gặp</h2>
                     <FaqAccordion items={tour.faq} />
                   </div>
                 )}
@@ -268,9 +270,15 @@ export default async function TourDetailPage({ params }: Props) {
               <div className="space-y-4 lg:sticky lg:top-24">
 
                 {/* Bảng giá */}
-                <div className="p-6 bg-white border border-[#E4E7EC] rounded-2xl shadow-md space-y-4">
-                  <h3 className="text-base font-bold text-[#101828]">Bảng giá xe riêng</h3>
-                  <p className="text-xs text-[#667085] italic leading-relaxed">
+                <div
+                  className="p-6 rounded-2xl shadow-md space-y-4 border"
+                  style={{
+                    backgroundColor: "var(--page-surface-2)",
+                    borderColor: "var(--page-border)"
+                  }}
+                >
+                  <h3 className="text-base font-bold" style={{ color: "var(--page-text)" }}>Bảng giá xe riêng</h3>
+                  <p className="text-xs italic leading-relaxed" style={{ color: "var(--page-text-dim)" }}>
                     {tour.priceNote}
                   </p>
 
@@ -287,13 +295,17 @@ export default async function TourDetailPage({ params }: Props) {
                       return (
                         <div
                           key={key}
-                          className="flex items-center justify-between p-3 bg-[#F7F6F1] rounded-xl"
+                          className="flex items-center justify-between p-3 rounded-xl border"
+                          style={{
+                            backgroundColor: "var(--page-bg)",
+                            borderColor: "var(--page-border)"
+                          }}
                         >
-                          <span className="flex items-center gap-2 text-sm font-semibold text-[#101828]">
-                            <Car className="w-4 h-4 text-[#172236]" />
+                          <span className="flex items-center gap-2 text-sm font-semibold" style={{ color: "var(--page-text)" }}>
+                            <Car className="w-4 h-4" style={{ color: "var(--page-primary-alt)" }} />
                             {label}
                           </span>
-                          <span className="text-base font-extrabold text-[#172236]">
+                          <span className="text-base font-extrabold" style={{ color: "var(--page-primary-alt)" }}>
                             {formatVnd(price)}
                           </span>
                         </div>
@@ -301,11 +313,12 @@ export default async function TourDetailPage({ params }: Props) {
                     })}
                   </div>
 
-                  <div className="flex flex-col gap-2.5 pt-2 border-t border-[#E4E7EC]">
+                  <div className="flex flex-col gap-2.5 pt-2 border-t" style={{ borderColor: "var(--page-border)" }}>
                     <a href={`tel:${huecartourContact.hotlineRaw}`}>
                       <Button
                         variant="secondary"
                         className="w-full font-bold flex items-center justify-center gap-2"
+                        style={{ backgroundColor: "var(--page-primary-alt)", color: "var(--page-bg)" }}
                       >
                         <Phone className="w-4 h-4" />
                         Gọi đặt xe ngay
@@ -314,7 +327,7 @@ export default async function TourDetailPage({ params }: Props) {
                     <a href="#dat-xe">
                       <Button
                         variant="outline"
-                        className="w-full font-bold flex items-center justify-center gap-2 border-[#172236]/20 text-[#172236] hover:bg-[#172236] hover:text-white"
+                        className="w-full font-bold flex items-center justify-center gap-2"
                       >
                         <CalendarCheck className="w-4 h-4" />
                         Nhận báo giá
@@ -324,16 +337,22 @@ export default async function TourDetailPage({ params }: Props) {
                 </div>
 
                 {/* Cam kết */}
-                <div className="p-5 bg-[#172236] rounded-2xl space-y-3">
-                  <h4 className="text-sm font-bold text-white">Cam kết của HUECARTOUR</h4>
+                <div
+                  className="p-5 rounded-2xl space-y-3 border"
+                  style={{
+                    backgroundColor: "var(--page-surface)",
+                    borderColor: "var(--page-border)"
+                  }}
+                >
+                  <h4 className="text-sm font-bold" style={{ color: "var(--page-text)" }}>Cam kết của HUECARTOUR</h4>
                   {[
                     "Báo giá trọn gói, không phụ phí",
                     "Xe đời mới, điều hòa mát",
                     "Tài xế đúng giờ, am hiểu địa phương",
                     "Hỗ trợ 24/7 trong suốt hành trình",
                   ].map((item) => (
-                    <div key={item} className="flex items-start gap-2 text-xs text-slate-300">
-                      <Shield className="w-3.5 h-3.5 text-[#E8B923] flex-shrink-0 mt-0.5" />
+                    <div key={item} className="flex items-start gap-2 text-xs" style={{ color: "var(--page-text-muted)" }}>
+                      <Shield className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "var(--page-primary-alt)" }} />
                       {item}
                     </div>
                   ))}
@@ -346,10 +365,11 @@ export default async function TourDetailPage({ params }: Props) {
         {/* Form đặt xe */}
         <section
           id="dat-xe"
-          className="py-14 sm:py-20 bg-white border-t border-[#E4E7EC] scroll-mt-20"
+          className="py-14 sm:py-20 border-t scroll-mt-20"
+          style={{ backgroundColor: "var(--page-surface)", borderColor: "var(--page-border)" }}
         >
           <Container>
-            <h2 className="text-2xl font-bold text-[#101828] mb-8 text-center">
+            <h2 className="text-2xl font-bold mb-8 text-center" style={{ color: "var(--page-text)" }}>
               Đặt xe cho hành trình này
             </h2>
             <BookingForm />
@@ -358,13 +378,14 @@ export default async function TourDetailPage({ params }: Props) {
 
         {/* Related tours */}
         {related.length > 0 && (
-          <section className="py-14 bg-[#F7F6F1] border-t border-[#E4E7EC]">
+          <section className="py-14 border-t" style={{ backgroundColor: "var(--page-bg)", borderColor: "var(--page-border)" }}>
             <Container>
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-bold text-[#101828]">Tuyến xe liên quan</h2>
+                <h2 className="text-xl font-bold" style={{ color: "var(--page-text)" }}>Tuyến xe liên quan</h2>
                 <Link
                   href="/dich-vu-xe-du-lich"
-                  className="text-sm text-[#172236] font-semibold hover:text-[#E8B923] transition-colors flex items-center gap-1"
+                  className="text-sm font-semibold transition-colors flex items-center gap-1"
+                  style={{ color: "var(--page-primary-alt)" }}
                 >
                   Xem tất cả <ArrowRight className="w-4 h-4" />
                 </Link>
