@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark ([data-theme="dark"] &);
+
 /* ============================================================
    DESIGN TOKENS & SYSTEM VARIABLES (3-LAYER ARCHITECTURE)
    Thương hiệu chính: TIẾN QUỐC AUTO SPA

@@ -20,7 +20,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   eyebrow,
   description,
   align = "center",
-  darkTheme = true,
+  darkTheme,
   className,
   ...props
 }) => {
@@ -36,8 +36,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       {eyebrow && (
         <span
           className={cn(
-            "text-xs md:text-sm font-bold tracking-widest uppercase",
-            darkTheme ? "text-[#38BDF8]" : "text-[#1E293B]"
+            "text-xs md:text-sm font-bold tracking-widest uppercase transition-colors",
+            darkTheme === true
+              ? "text-[#38BDF8]"
+              : "text-[#0284C7] dark:text-[#38BDF8]"
           )}
         >
           {eyebrow}
@@ -45,8 +47,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       )}
       <h2
         className={cn(
-          "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight",
-          darkTheme ? "text-[#F8FAFC]" : "text-[#0F172A]"
+          "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight transition-colors",
+          darkTheme === true
+            ? "text-[#F8FAFC]"
+            : "text-[#0F172A] dark:text-[#F8FAFC]"
         )}
       >
         {title}
@@ -54,8 +58,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       {description && (
         <p
           className={cn(
-            "max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed font-normal",
-            darkTheme ? "text-[#CBD5E1]" : "text-[#475569]"
+            "max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed font-normal transition-colors",
+            darkTheme === true
+              ? "text-[#CBD5E1]"
+              : "text-[#475569] dark:text-[#CBD5E1]"
           )}
         >
           {description}

@@ -334,7 +334,6 @@ export default function HomePage() {
               eyebrow="DỊCH VỤ CỦA CHÚNG TÔI"
               title="Dịch vụ chăm sóc ô tô toàn diện"
               description="Từ rửa xe chi tiết, vệ sinh nội thất đến phủ ceramic, dán phim cách nhiệt — mọi nhu cầu chăm sóc xe."
-              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -421,7 +420,6 @@ export default function HomePage() {
               eyebrow="TẠI SAO CHỌN CHÚNG TÔI"
               title="Cam kết chất lượng tốt nhất tại Huế"
               description="Chúng tôi chăm sóc xe của bạn như chăm sóc xe của chính mình."
-              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -467,7 +465,6 @@ export default function HomePage() {
               eyebrow="QUY TRÌNH LÀM VIỆC"
               title="5 bước tiếp nhận chuyên nghiệp"
               description="Minh bạch từng bước — bạn biết rõ xe đang được làm gì và chi phí bao nhiêu."
-              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -521,7 +518,6 @@ export default function HomePage() {
               eyebrow="GÓI DỊCH VỤ ĐỀ XUẤT"
               title="Chọn gói phù hợp"
               description="Liên hệ để nhận báo giá theo dòng xe và tình trạng thực tế."
-              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
@@ -596,7 +592,6 @@ export default function HomePage() {
               eyebrow="HÌNH ẢNH THỰC TẾ"
               title="Kết quả từ garage của chúng tôi"
               description="Hình ảnh xe trước và sau khi chăm sóc tại Tiến Quốc Auto Spa."
-              darkTheme={false}
             />
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
@@ -650,7 +645,6 @@ export default function HomePage() {
               eyebrow="Ý KIẾN KHÁCH HÀNG"
               title="Khách hàng nói gì về chúng tôi"
               description="Sự hài lòng của quý khách là động lực để chúng tôi không ngừng cải thiện."
-              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -812,7 +806,6 @@ export default function HomePage() {
               eyebrow="GIẢI ĐÁP THẮC MẮC"
               title="Câu hỏi thường gặp"
               description="Giải đáp nhanh các thắc mắc phổ biến nhất."
-              darkTheme={false}
             />
             <FaqAccordion items={autospaFaq} />
           </Container>
@@ -830,7 +823,6 @@ export default function HomePage() {
             <SectionHeading
               eyebrow="KẾT NỐI VỚI CHÚNG TÔI"
               title="Tìm chúng tôi tại đây"
-              darkTheme={false}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
