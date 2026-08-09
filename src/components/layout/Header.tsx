@@ -23,12 +23,7 @@ export const Header: React.FC = () => {
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const { theme, toggleTheme, isDark } = useTheme();
-
-  // Đóng menu khi route thay đổi
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+  const { toggleTheme, isDark } = useTheme();
 
   // Khóa cuộn trang khi menu drawer mở ra
   useEffect(() => {
