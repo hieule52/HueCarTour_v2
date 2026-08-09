@@ -1,7 +1,8 @@
 // ============================================================
 // src/lib/mail.service.ts
 // Mail Service dùng chung — Nodemailer + Gmail SMTP
-// Không hard-code credentials, đọc từ process.env
+// HTML Email Templates — Brand: TIẾN QUỐC AUTO SPA
+// Inline CSS, table-based layout, Gmail/Outlook/Apple Mail compatible
 // ============================================================
 
 import nodemailer from "nodemailer";
@@ -64,94 +65,225 @@ function getTimestamp(): string {
 }
 
 // ----------------------------------------------------------
-// HTML template chung cho cả 2 loại email
+// Helper: giá trị muted khi không có dữ liệu
 // ----------------------------------------------------------
-function buildEmailWrapper(title: string, bodyHtml: string): string {
+function muted(text: string): string {
+  return `<span style="color:#7895B2;font-style:italic;">${text}</span>`;
+}
+
+// ===========================================================
+// EMAIL LAYOUT BUILDER
+// title: tiêu đề thông báo (màu trắng, to, bold)
+// brandLabel: dòng label thương hiệu trên title (màu cyan)
+// subLabel: dòng phụ nhỏ giữa brandLabel và title (ví dụ: HUE CAR TOUR)
+// bodyHtml: nội dung phần thân email
+// ===========================================================
+function buildEmailWrapper(
+  title: string,
+  bodyHtml: string,
+  subLabel?: string
+): string {
+  const subLabelHtml = subLabel
+    ? `<p style="margin:4px 0 6px;font-size:11px;color:#C7D7E8;letter-spacing:2px;font-weight:600;text-transform:uppercase;">${subLabel}</p>`
+    : "";
+
   return `<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>${title}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#0a0f1a;font-family:'Segoe UI',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0f1a;padding:32px 16px;">
+<body style="margin:0;padding:0;background-color:#E8EFF7;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+
+  <!-- Outer wrapper -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#E8EFF7;padding:24px 12px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#0d1526;border-radius:12px;overflow:hidden;border:1px solid #1e3a5f;">
 
-          <!-- HEADER -->
+        <!-- Container card -->
+        <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#FFFFFF;border-radius:10px;overflow:hidden;border:1px solid #C7D7E8;">
+
+          <!-- ===== HEADER ===== -->
           <tr>
-            <td style="background:linear-gradient(135deg,#0d1f3c 0%,#102a4c 100%);padding:28px 32px;border-bottom:2px solid #00c8ff;">
-              <table width="100%" cellpadding="0" cellspacing="0">
+            <td style="background-color:#082B50;padding:28px 28px 24px;">
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td>
-                    <p style="margin:0;font-size:11px;color:#00c8ff;letter-spacing:3px;text-transform:uppercase;font-weight:700;">TIẾN QUỐC AUTO SPA</p>
-                    <h1 style="margin:6px 0 0;font-size:20px;color:#ffffff;font-weight:800;line-height:1.3;">${title}</h1>
+                  <td style="vertical-align:middle;">
+                    <!-- Brand label -->
+                    <p style="margin:0 0 4px;font-size:10px;color:#38BDF8;letter-spacing:3px;text-transform:uppercase;font-weight:700;">TIẾN QUỐC AUTO SPA</p>
+                    ${subLabelHtml}
+                    <!-- Main title -->
+                    <h1 style="margin:0;font-size:20px;color:#FFFFFF;font-weight:800;line-height:1.35;">${title}</h1>
                   </td>
-                  <td align="right" style="vertical-align:top;">
-                    <div style="width:48px;height:48px;background:linear-gradient(135deg,#168bff,#00c8ff);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                      <span style="color:#fff;font-size:24px;line-height:48px;display:block;text-align:center;">🚗</span>
-                    </div>
+                  <!-- Icon box -->
+                  <td style="vertical-align:top;padding-left:16px;width:52px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background-color:#0B3158;border-radius:10px;width:48px;height:48px;text-align:center;vertical-align:middle;">
+                          <span style="font-size:22px;line-height:1;">🚗</span>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
+
+              <!-- Divider line -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+                <tr>
+                  <td style="height:2px;background-color:#38BDF8;border-radius:2px;"></td>
+                </tr>
+              </table>
+
             </td>
           </tr>
 
-          <!-- BODY -->
+          <!-- ===== BODY ===== -->
           <tr>
-            <td style="padding:28px 32px;">
+            <td style="background-color:#F8FBFF;padding:24px 20px;">
               ${bodyHtml}
             </td>
           </tr>
 
-          <!-- FOOTER -->
+          <!-- ===== FOOTER ===== -->
           <tr>
-            <td style="background-color:#060d1a;padding:20px 32px;border-top:1px solid #1e3a5f;text-align:center;">
-              <p style="margin:0;font-size:12px;color:#4a6fa5;">
-                Email tự động từ hệ thống <strong style="color:#00c8ff;">Tiến Quốc Auto Spa</strong><br />
-                147 Phùng Quán, phường Thanh Thủy, TP Huế · Hotline: 036 448 3597
+            <td style="background-color:#F1F5F9;border-top:1px solid #C7D7E8;padding:18px 20px;text-align:center;">
+              <p style="margin:0 0 4px;font-size:12px;color:#64748B;">
+                Email tự động từ hệ thống &bull;
+                <strong style="color:#087EA4;font-weight:700;">TIẾN QUỐC AUTO SPA</strong>
+              </p>
+              <p style="margin:0;font-size:11px;color:#64748B;">
+                147 Phùng Quán, TP Huế &bull; Hotline: <span style="color:#087EA4;font-weight:600;">036 448 3597</span>
               </p>
             </td>
           </tr>
 
         </table>
+        <!-- /Container card -->
+
       </td>
     </tr>
   </table>
+  <!-- /Outer wrapper -->
+
 </body>
 </html>`;
 }
 
-// ----------------------------------------------------------
-// Tạo section card dùng trong body email
-// ----------------------------------------------------------
-function buildSection(sectionTitle: string, rows: [string, string][]): string {
+// ===========================================================
+// SECTION BUILDER
+// Tạo một card section với tiêu đề và các dòng label/value
+// ===========================================================
+function buildSection(
+  sectionTitle: string,
+  rows: [string, string][]
+): string {
   const rowsHtml = rows
     .map(
-      ([label, value]) => `
+      ([label, value], index) => `
       <tr>
-        <td style="padding:10px 14px;color:#8ab4d4;font-size:13px;font-weight:600;white-space:nowrap;vertical-align:top;width:40%;">${label}</td>
-        <td style="padding:10px 14px;color:#e8f0fe;font-size:13px;vertical-align:top;">${value}</td>
+        <td colspan="2" style="padding:0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr style="background-color:${index % 2 === 0 ? "#FFFFFF" : "#F8FBFF"};">
+              <!-- Label -->
+              <td style="padding:10px 14px;color:#456B82;font-size:12px;font-weight:600;vertical-align:top;width:38%;border-right:1px solid #EEF4FF;">
+                ${label}
+              </td>
+              <!-- Value -->
+              <td style="padding:10px 14px;color:#111827;font-size:13px;font-weight:700;vertical-align:top;">
+                ${value}
+              </td>
+            </tr>
+          </table>
+        </td>
       </tr>`
     )
     .join("");
 
   return `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;background-color:#111e35;border-radius:8px;overflow:hidden;border:1px solid #1e3a5f;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #C7D7E8;">
+      <!-- Section header -->
       <tr>
-        <td colspan="2" style="background-color:#0e1f3d;padding:10px 14px;border-bottom:1px solid #1e3a5f;">
-          <p style="margin:0;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#00c8ff;">${sectionTitle}</p>
+        <td colspan="2" style="background-color:#EEF4FF;padding:10px 14px;border-bottom:1px solid #C7D7E8;">
+          <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#087EA4;">${sectionTitle}</p>
         </td>
       </tr>
       ${rowsHtml}
     </table>`;
 }
 
-// ----------------------------------------------------------
-// 1. Email đặt lịch chăm sóc xe (AutoSpa)
-// ----------------------------------------------------------
+// ===========================================================
+// TIMESTAMP BLOCK
+// ===========================================================
+function buildTimestampBlock(timestamp: string): string {
+  return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #86D1A5;background-color:#DDF7E8;">
+      <tr>
+        <td style="padding:12px 16px;">
+          <p style="margin:0;font-size:12px;color:#047857;font-weight:700;">
+            ⏰ Thời gian gửi yêu cầu:
+          </p>
+          <p style="margin:4px 0 0;font-size:13px;color:#166534;font-weight:600;">
+            ${timestamp}
+          </p>
+        </td>
+      </tr>
+    </table>`;
+}
+
+// ===========================================================
+// CTA BLOCK
+// highlightPhrase: cụm từ sẽ được highlight màu cyan trong message
+// ===========================================================
+function buildCtaBlock(
+  phone: string,
+  message: string,
+  highlightPhrase: string,
+  customerEmail?: string
+): string {
+  // Escape và replace highlight phrase
+  const safeMessage = message.replace(
+    highlightPhrase,
+    `<strong style="color:#38BDF8;">${highlightPhrase}</strong>`
+  );
+
+  const emailButtonHtml = customerEmail
+    ? `<a href="mailto:${customerEmail}"
+         style="display:inline-block;background-color:#FFFFFF;color:#082B50;border:2px solid #C7D7E8;padding:10px 22px;border-radius:6px;font-weight:800;font-size:13px;text-decoration:none;margin-left:10px;">
+         ✉ Trả lời Email
+       </a>`
+    : "";
+
+  return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:8px;overflow:hidden;border:1px solid #0B3158;background-color:#082B50;">
+      <tr>
+        <td style="padding:18px 16px;text-align:center;">
+          <p style="margin:0 0 14px;font-size:13px;color:#FFFFFF;line-height:1.6;">
+            📋 ${safeMessage}
+          </p>
+          <!-- Buttons row -->
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+            <tr>
+              <td>
+                <a href="tel:${phone}"
+                   style="display:inline-block;background-color:#38BDF8;color:#071827;padding:11px 26px;border-radius:6px;font-weight:800;font-size:14px;text-decoration:none;">
+                  📞 Gọi ${phone}
+                </a>
+              </td>
+              ${customerEmail ? `<td style="padding-left:10px;">${emailButtonHtml}</td>` : ""}
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`;
+}
+
+// ===========================================================
+// 1. Email đặt lịch chăm sóc xe — AUTO SPA
+// ===========================================================
 export async function sendAutoSpaBookingEmail(
   data: AutoSpaBookingFormData
 ): Promise<void> {
@@ -162,71 +294,62 @@ export async function sendAutoSpaBookingEmail(
 
   const bodyHtml = `
     ${buildSection("THÔNG TIN KHÁCH HÀNG", [
-      ["Họ và tên", `<strong style="color:#ffffff;">${data.fullName}</strong>`],
+      ["Họ và tên", `<strong style="color:#0F172A;font-weight:700;">${data.fullName}</strong>`],
       [
         "Số điện thoại / Zalo",
-        `<a href="tel:${data.phone}" style="color:#00c8ff;font-size:16px;font-weight:800;text-decoration:none;">📞 ${data.phone}</a>`,
+        `<a href="tel:${data.phone}" style="color:#0891B2;font-size:15px;font-weight:800;text-decoration:none;">📞 ${data.phone}</a>`,
       ],
     ])}
 
     ${buildSection("THÔNG TIN XE", [
-      ["Dòng xe", `<strong style="color:#ffffff;">${data.carModel}</strong>`],
+      ["Dòng xe", `<strong style="color:#0F172A;font-weight:700;">${data.carModel}</strong>`],
       [
         "Biển số xe",
-        data.licensePlate
-          ? `<strong style="color:#ffffff;">${data.licensePlate}</strong>`
-          : '<span style="color:#4a6fa5;font-style:italic;">Không cung cấp</span>',
+        data.licensePlate && data.licensePlate.trim() !== ""
+          ? `<strong style="color:#0F172A;font-weight:700;">${data.licensePlate}</strong>`
+          : muted("Không cung cấp"),
       ],
     ])}
 
     ${buildSection("THÔNG TIN LỊCH HẸN", [
-      ["Dịch vụ đăng ký", `<strong style="color:#00c8ff;">${data.service}</strong>`],
-      ["Ngày hẹn", `<strong style="color:#ffffff;">${formattedDate}</strong>`],
-      ["Giờ hẹn", `<strong style="color:#ffffff;">${data.time}</strong>`],
+      ["Dịch vụ đăng ký", `<strong style="color:#0891B2;font-weight:700;">${data.service}</strong>`],
+      ["Ngày hẹn", `<strong style="color:#0F172A;font-weight:700;">${formattedDate}</strong>`],
+      ["Giờ hẹn", `<strong style="color:#0F172A;font-weight:700;">${data.time}</strong>`],
     ])}
 
     ${buildSection("YÊU CẦU KHÁCH HÀNG", [
       [
         "Tình trạng xe / Yêu cầu xử lý",
-        `<span style="color:#e8f0fe;white-space:pre-wrap;">${data.carCondition}</span>`,
+        `<span style="color:#1F2937;font-weight:600;white-space:pre-wrap;">${data.carCondition}</span>`,
       ],
       [
         "Ghi chú thêm",
-        data.note
-          ? `<span style="color:#e8f0fe;white-space:pre-wrap;">${data.note}</span>`
-          : '<span style="color:#4a6fa5;font-style:italic;">Không có</span>',
+        data.note && data.note.trim() !== ""
+          ? `<span style="color:#1F2937;font-weight:600;white-space:pre-wrap;">${data.note}</span>`
+          : muted("Không có"),
       ],
     ])}
 
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;background-color:#0d2a1a;border:1px solid #1a5c35;border-radius:8px;padding:14px;">
-      <tr>
-        <td style="padding:12px 14px;color:#6fcf97;font-size:12px;">
-          ⏰ <strong>Thời gian gửi yêu cầu:</strong> ${timestamp}
-        </td>
-      </tr>
-    </table>
+    ${buildTimestampBlock(timestamp)}
 
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1f3c,#102a4c);border:1px solid #00c8ff;border-radius:8px;padding:16px;">
-      <tr>
-        <td style="padding:12px 14px;color:#8ab4d4;font-size:13px;text-align:center;">
-          📋 <strong style="color:#ffffff;">Vui lòng liên hệ khách hàng để xác nhận lịch hẹn.</strong><br />
-          <a href="tel:${data.phone}" style="display:inline-block;margin-top:12px;background:linear-gradient(135deg,#168bff,#00c8ff);color:#ffffff;padding:10px 28px;border-radius:6px;font-weight:800;font-size:14px;text-decoration:none;">📞 Gọi ${data.phone}</a>
-        </td>
-      </tr>
-    </table>
+    ${buildCtaBlock(
+      data.phone,
+      "Vui lòng liên hệ khách hàng để xác nhận lịch hẹn.",
+      "xác nhận lịch hẹn"
+    )}
   `;
 
   await transporter.sendMail({
     from: `"Tiến Quốc Auto Spa" <${process.env.MAIL_USER}>`,
     to: recipient,
-    subject: `[TIẾN QUỐC AUTO SPA] Lịch chăm sóc xe mới - ${data.fullName}`,
+    subject: `[AUTO SPA] Lịch chăm sóc xe mới — ${data.fullName} · ${data.phone}`,
     html: buildEmailWrapper("THÔNG BÁO LỊCH CHĂM SÓC XE MỚI", bodyHtml),
   });
 }
 
-// ----------------------------------------------------------
-// 2. Email đặt xe du lịch (HueCarTour)
-// ----------------------------------------------------------
+// ===========================================================
+// 2. Email đặt xe du lịch — HUE CAR TOUR
+// ===========================================================
 export async function sendCarBookingEmail(
   data: BookingFormData
 ): Promise<void> {
@@ -237,62 +360,60 @@ export async function sendCarBookingEmail(
 
   const bodyHtml = `
     ${buildSection("THÔNG TIN KHÁCH HÀNG", [
-      ["Họ và tên", `<strong style="color:#ffffff;">${data.fullName}</strong>`],
+      ["Họ và tên", `<strong style="color:#0F172A;font-weight:700;">${data.fullName}</strong>`],
       [
         "Số điện thoại / Zalo",
-        `<a href="tel:${data.phone}" style="color:#00c8ff;font-size:16px;font-weight:800;text-decoration:none;">📞 ${data.phone}</a>`,
+        `<a href="tel:${data.phone}" style="color:#0891B2;font-size:15px;font-weight:800;text-decoration:none;">📞 ${data.phone}</a>`,
       ],
     ])}
 
     ${buildSection("THÔNG TIN CHUYẾN ĐI", [
-      ["Điểm đón", `<strong style="color:#ffffff;">${data.pickupPoint}</strong>`],
-      ["Điểm đến / Lộ trình", `<strong style="color:#ffffff;">${data.destination}</strong>`],
-      ["Ngày đi", `<strong style="color:#ffffff;">${formattedDate}</strong>`],
-      ["Giờ đón", `<strong style="color:#ffffff;">${data.time}</strong>`],
+      ["Điểm đón", `<strong style="color:#0F172A;font-weight:700;">${data.pickupPoint}</strong>`],
+      ["Điểm đến / Lộ trình", `<strong style="color:#0F172A;font-weight:700;">${data.destination}</strong>`],
+      ["Ngày đi", `<strong style="color:#0F172A;font-weight:700;">${formattedDate}</strong>`],
+      ["Giờ đón", `<strong style="color:#0F172A;font-weight:700;">${data.time}</strong>`],
     ])}
 
     ${buildSection("THÔNG TIN XE", [
-      ["Loại xe", `<strong style="color:#00c8ff;">${data.vehicleType}</strong>`],
-      ["Số hành khách", `<strong style="color:#ffffff;">${data.passengers} người</strong>`],
+      ["Loại xe yêu cầu", `<strong style="color:#0891B2;font-weight:700;">${data.vehicleType}</strong>`],
+      ["Số hành khách", `<strong style="color:#0F172A;font-weight:700;">${data.passengers} người</strong>`],
+    ])}
+
+    ${buildSection("THÔNG TIN TOUR", [
       [
         "Tour quan tâm",
-        data.tourInterest
-          ? `<strong style="color:#ffffff;">${data.tourInterest}</strong>`
-          : '<span style="color:#4a6fa5;font-style:italic;">Không chỉ định</span>',
+        data.tourInterest && data.tourInterest.trim() !== ""
+          ? `<strong style="color:#0F172A;font-weight:700;">${data.tourInterest}</strong>`
+          : muted("Chưa chọn"),
       ],
     ])}
 
     ${buildSection("YÊU CẦU RIÊNG", [
       [
-        "Ghi chú lịch trình",
-        data.note
-          ? `<span style="color:#e8f0fe;white-space:pre-wrap;">${data.note}</span>`
-          : '<span style="color:#4a6fa5;font-style:italic;">Không có yêu cầu riêng</span>',
+        "Ghi chú lịch trình / Yêu cầu riêng",
+        data.note && data.note.trim() !== ""
+          ? `<span style="color:#1F2937;font-weight:600;white-space:pre-wrap;">${data.note}</span>`
+          : muted("Không có yêu cầu riêng"),
       ],
     ])}
 
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;background-color:#0d2a1a;border:1px solid #1a5c35;border-radius:8px;">
-      <tr>
-        <td style="padding:12px 14px;color:#6fcf97;font-size:12px;">
-          ⏰ <strong>Thời gian gửi yêu cầu:</strong> ${timestamp}
-        </td>
-      </tr>
-    </table>
+    ${buildTimestampBlock(timestamp)}
 
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1f3c,#102a4c);border:1px solid #00c8ff;border-radius:8px;">
-      <tr>
-        <td style="padding:16px 14px;color:#8ab4d4;font-size:13px;text-align:center;">
-          📋 <strong style="color:#ffffff;">Vui lòng liên hệ khách hàng để tư vấn và báo giá.</strong><br />
-          <a href="tel:${data.phone}" style="display:inline-block;margin-top:12px;background:linear-gradient(135deg,#168bff,#00c8ff);color:#ffffff;padding:10px 28px;border-radius:6px;font-weight:800;font-size:14px;text-decoration:none;">📞 Gọi ${data.phone}</a>
-        </td>
-      </tr>
-    </table>
+    ${buildCtaBlock(
+      data.phone,
+      "Vui lòng liên hệ khách hàng để tư vấn và báo giá.",
+      "tư vấn và báo giá"
+    )}
   `;
 
   await transporter.sendMail({
     from: `"Tiến Quốc Auto Spa" <${process.env.MAIL_USER}>`,
     to: recipient,
-    subject: `[TIẾN QUỐC AUTO SPA] Yêu cầu đặt xe mới - ${data.fullName}`,
-    html: buildEmailWrapper("THÔNG BÁO YÊU CẦU ĐẶT XE DU LỊCH", bodyHtml),
+    subject: `[HUE CAR TOUR] Yêu cầu đặt xe mới — ${data.fullName} · ${data.phone}`,
+    html: buildEmailWrapper(
+      "YÊU CẦU ĐẶT XE DU LỊCH MỚI",
+      bodyHtml,
+      "HUE CAR TOUR"
+    ),
   });
 }
