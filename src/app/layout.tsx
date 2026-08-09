@@ -10,6 +10,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingContact } from "@/components/common/FloatingContact";
 import { MobileContactBar } from "@/components/common/MobileContactBar";
+import { ThemeProvider, ThemeScript } from "@/context/ThemeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -134,26 +135,32 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Anti-FOUC: inject theme trước khi React hydrate */}
+        <ThemeScript />
+      </head>
       <body className="min-h-full flex flex-col bg-bg-app text-text-primary">
-        {/* Skip to main content link for screen readers */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-primary focus:text-white z-50"
-        >
-          Chuyển đến nội dung chính
-        </a>
+        <ThemeProvider>
+          {/* Skip to main content link for screen readers */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-primary focus:text-white z-50"
+          >
+            Chuyển đến nội dung chính
+          </a>
 
-        <Header />
+          <Header />
 
-        <main id="main-content" className="flex-grow pb-safe">
-          {children}
-        </main>
+          <main id="main-content" className="flex-grow pb-safe">
+            {children}
+          </main>
 
-        <Footer />
+          <Footer />
 
-        {/* Floating actions */}
-        <FloatingContact />
-        <MobileContactBar />
+          {/* Floating actions */}
+          <FloatingContact />
+          <MobileContactBar />
+        </ThemeProvider>
       </body>
     </html>
   );

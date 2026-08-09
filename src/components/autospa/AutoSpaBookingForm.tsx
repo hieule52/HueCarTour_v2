@@ -1,6 +1,6 @@
 // ============================================================
 // src/components/autospa/AutoSpaBookingForm.tsx
-// Biểu mẫu đặt lịch Auto Spa chuyên nghiệp — High Contrast Dark Theme
+// Biểu mẫu đặt lịch Auto Spa chuyên nghiệp — Theme-aware
 // ============================================================
 
 "use client";
@@ -14,10 +14,12 @@ import { autospaServices } from "@/data/autospa";
 import { Button } from "../common/Button";
 import { SuccessMessage } from "../common/SuccessMessage";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
 
 export const AutoSpaBookingForm: React.FC = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { isDark } = useTheme();
 
   const {
     register,
@@ -80,10 +82,20 @@ export const AutoSpaBookingForm: React.FC = () => {
 
   return (
     <div
-      className="w-full bg-[#0E1726] border border-slate-800 rounded-custom-lg shadow-xl p-6 sm:p-8"
+      className={cn(
+        "w-full border rounded-custom-lg shadow-xl p-6 sm:p-8 transition-colors duration-300",
+        isDark
+          ? "bg-[#0E1726] border-slate-800"
+          : "bg-white border-gray-200"
+      )}
       id="spa-booking-form"
     >
-      <h3 className="text-xl sm:text-2xl font-extrabold text-[#F8FAFC] mb-6 text-center">
+      <h3
+        className={cn(
+          "text-xl sm:text-2xl font-extrabold mb-6 text-center",
+          isDark ? "text-[#F8FAFC]" : "text-gray-900"
+        )}
+      >
         Đặt Lịch Chăm Sóc Xe Chuyên Nghiệp
       </h3>
 
@@ -123,7 +135,10 @@ export const AutoSpaBookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="fullName"
-                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
                 <User className="w-4 h-4 text-[#38BDF8]" />
                 Họ và tên <span className="text-red-400">*</span>
@@ -133,8 +148,11 @@ export const AutoSpaBookingForm: React.FC = () => {
                 type="text"
                 placeholder="Nhập họ và tên"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
-                  errors.fullName ? "border-red-500" : "border-slate-700"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.fullName && "border-red-500"
                 )}
                 {...register("fullName")}
               />
@@ -148,7 +166,10 @@ export const AutoSpaBookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="phone"
-                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
                 <Phone className="w-4 h-4 text-[#38BDF8]" />
                 Số điện thoại / Zalo <span className="text-red-400">*</span>
@@ -158,8 +179,11 @@ export const AutoSpaBookingForm: React.FC = () => {
                 type="tel"
                 placeholder="Ví dụ: 0905123456"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
-                  errors.phone ? "border-red-500" : "border-slate-700"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.phone && "border-red-500"
                 )}
                 {...register("phone")}
               />
@@ -176,7 +200,10 @@ export const AutoSpaBookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="carModel"
-                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
                 <Car className="w-4 h-4 text-[#38BDF8]" />
                 Dòng xe <span className="text-red-400">*</span>
@@ -186,8 +213,11 @@ export const AutoSpaBookingForm: React.FC = () => {
                 type="text"
                 placeholder="Ví dụ: Toyota Vios, Mazda 3, Ford Ranger..."
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
-                  errors.carModel ? "border-red-500" : "border-slate-700"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                  errors.carModel && "border-red-500"
                 )}
                 {...register("carModel")}
               />
@@ -201,7 +231,10 @@ export const AutoSpaBookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="licensePlate"
-                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
                 <Car className="w-4 h-4 text-[#38BDF8]" />
                 Biển số xe (không bắt buộc)
@@ -210,7 +243,12 @@ export const AutoSpaBookingForm: React.FC = () => {
                 id="licensePlate"
                 type="text"
                 placeholder="Ví dụ: 75A-123.45"
-                className="w-full h-11 px-3.5 border border-slate-700 rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none"
+                className={cn(
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                    : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300"
+                )}
                 {...register("licensePlate")}
               />
             </div>
@@ -220,7 +258,10 @@ export const AutoSpaBookingForm: React.FC = () => {
           <div className="space-y-1.5">
             <label
               htmlFor="service"
-              className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+              className={cn(
+                "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                isDark ? "text-[#F8FAFC]" : "text-gray-700"
+              )}
             >
               <Car className="w-4 h-4 text-[#38BDF8]" />
               Dịch vụ cần làm <span className="text-red-400">*</span>
@@ -228,13 +269,20 @@ export const AutoSpaBookingForm: React.FC = () => {
             <select
               id="service"
               className={cn(
-                "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] border-slate-700 focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
-                errors.service ? "border-red-500" : "border-slate-700"
+                "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                isDark
+                  ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                  : "bg-gray-50 text-gray-900 border-gray-300",
+                errors.service && "border-red-500"
               )}
               {...register("service")}
             >
               {autospaServices.map((svc) => (
-                <option key={svc.id} value={svc.name} className="bg-[#050A12] text-[#F8FAFC]">
+                <option
+                  key={svc.id}
+                  value={svc.name}
+                  className={isDark ? "bg-[#050A12] text-[#F8FAFC]" : "bg-white text-gray-900"}
+                >
                   {svc.name} ({svc.priceLabel})
                 </option>
               ))}
@@ -251,7 +299,10 @@ export const AutoSpaBookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="date"
-                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
                 <Calendar className="w-4 h-4 text-[#38BDF8]" />
                 Ngày hẹn <span className="text-red-400">*</span>
@@ -260,8 +311,11 @@ export const AutoSpaBookingForm: React.FC = () => {
                 id="date"
                 type="date"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
-                  errors.date ? "border-red-500" : "border-slate-700"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.date && "border-red-500"
                 )}
                 {...register("date")}
               />
@@ -275,7 +329,10 @@ export const AutoSpaBookingForm: React.FC = () => {
             <div className="space-y-1.5">
               <label
                 htmlFor="time"
-                className="text-xs sm:text-sm font-bold text-[#F8FAFC] flex items-center gap-1.5"
+                className={cn(
+                  "text-xs sm:text-sm font-bold flex items-center gap-1.5",
+                  isDark ? "text-[#F8FAFC]" : "text-gray-700"
+                )}
               >
                 <Clock className="w-4 h-4 text-[#38BDF8]" />
                 Giờ hẹn <span className="text-red-400">*</span>
@@ -284,8 +341,11 @@ export const AutoSpaBookingForm: React.FC = () => {
                 id="time"
                 type="time"
                 className={cn(
-                  "w-full h-11 px-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
-                  errors.time ? "border-red-500" : "border-slate-700"
+                  "w-full h-11 px-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none focus:ring-1 focus:ring-[#38BDF8]",
+                  isDark
+                    ? "bg-[#050A12] text-[#F8FAFC] border-slate-700"
+                    : "bg-gray-50 text-gray-900 border-gray-300",
+                  errors.time && "border-red-500"
                 )}
                 {...register("time")}
               />
@@ -301,7 +361,10 @@ export const AutoSpaBookingForm: React.FC = () => {
           <div className="space-y-1.5">
             <label
               htmlFor="carCondition"
-              className="text-xs sm:text-sm font-bold text-[#F8FAFC]"
+              className={cn(
+                "text-xs sm:text-sm font-bold",
+                isDark ? "text-[#F8FAFC]" : "text-gray-700"
+              )}
             >
               Tình trạng xe hiện tại hoặc yêu cầu xử lý{" "}
               <span className="text-red-400">*</span>
@@ -311,8 +374,11 @@ export const AutoSpaBookingForm: React.FC = () => {
               rows={3}
               placeholder="Ví dụ: Xe bị bụi bẩn nhiều, móp nhẹ cản trước, hoặc sơn xe bị xước nhẹ cần đánh bóng..."
               className={cn(
-                "w-full p-3.5 border rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none resize-none",
-                errors.carCondition ? "border-red-500" : "border-slate-700"
+                "w-full p-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none resize-none",
+                isDark
+                  ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                  : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300",
+                errors.carCondition && "border-red-500"
               )}
               {...register("carCondition")}
             />
@@ -327,7 +393,10 @@ export const AutoSpaBookingForm: React.FC = () => {
           <div className="space-y-1.5">
             <label
               htmlFor="note"
-              className="text-xs sm:text-sm font-bold text-[#F8FAFC]"
+              className={cn(
+                "text-xs sm:text-sm font-bold",
+                isDark ? "text-[#F8FAFC]" : "text-gray-700"
+              )}
             >
               Ghi chú thêm (nếu có)
             </label>
@@ -335,7 +404,12 @@ export const AutoSpaBookingForm: React.FC = () => {
               id="note"
               rows={2}
               placeholder="Nhập ghi chú hoặc thời gian đặc biệt..."
-              className="w-full p-3.5 border border-slate-700 rounded-custom-md text-sm bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] focus:border-[#38BDF8] focus:outline-none resize-none"
+              className={cn(
+                "w-full p-3.5 border rounded-custom-md text-sm focus:border-[#38BDF8] focus:outline-none resize-none",
+                isDark
+                  ? "bg-[#050A12] text-[#F8FAFC] placeholder:text-[#94A3B8] border-slate-700"
+                  : "bg-gray-50 text-gray-900 placeholder:text-gray-400 border-gray-300"
+              )}
               {...register("note")}
             />
           </div>

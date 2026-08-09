@@ -2,6 +2,7 @@
 // src/components/common/FloatingContact.tsx
 // Nút liên hệ nổi cạnh phải cho Desktop (từ 1024px trở lên)
 // Mặc định: Auto Spa. Khi /dich-vu-xe-du-lich: HUECARTOUR
+// FIX: Zalo icon lớn hơn, theme-aware
 // ============================================================
 
 "use client";
@@ -19,6 +20,13 @@ export const FloatingContact: React.FC = () => {
   const isHuecartour = pathname?.startsWith("/dich-vu-xe-du-lich");
   const contact = isHuecartour ? huecartourContact : autospaContact;
 
+  // Zalo icon: tăng từ text-xs lên text-sm font-black
+  const ZaloIcon = (
+    <span className="font-black text-sm leading-none select-none" aria-hidden="true">
+      Zalo
+    </span>
+  );
+
   const links = [
     {
       id: "call",
@@ -32,7 +40,7 @@ export const FloatingContact: React.FC = () => {
       id: "zalo",
       label: "Nhắn Zalo",
       href: contact.zaloUrl,
-      icon: <span className="font-bold text-xs">Zalo</span>,
+      icon: ZaloIcon,
       color: "bg-blue-600 hover:bg-blue-700 text-white",
       disabled: isPlaceholderUrl(contact.zaloUrl),
     },

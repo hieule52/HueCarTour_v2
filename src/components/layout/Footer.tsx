@@ -1,8 +1,10 @@
 // ============================================================
 // src/components/layout/Footer.tsx
 // Footer — Tiến Quốc Auto Spa làm thương hiệu chính
-// 4 cột: Brand, Dịch vụ Auto Spa, Dịch vụ bổ sung HCT, Liên hệ
+// THÊM: Theme-aware colors (dark/light)
 // ============================================================
+
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -10,12 +12,22 @@ import Image from "next/image";
 import { MapPin, Phone, Clock, ExternalLink } from "lucide-react";
 import { Container } from "../common/Container";
 import { siteConfig, autospaContact } from "@/data/site";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
 export const Footer: React.FC = () => {
   const year = new Date().getFullYear();
+  const { isDark } = useTheme();
 
   return (
-    <footer className="bg-[#030810] text-gray-300 pt-16 pb-20 lg:pb-12 border-t border-slate-800">
+    <footer
+      className={cn(
+        "pt-16 pb-20 lg:pb-12 border-t transition-colors duration-300",
+        isDark
+          ? "bg-[#030810] text-gray-300 border-slate-800"
+          : "bg-gray-900 text-gray-300 border-gray-700"
+      )}
+    >
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mb-12">
 
