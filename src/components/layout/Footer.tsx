@@ -173,11 +173,24 @@ export const Footer: React.FC = () => {
         <div className="pt-8 border-t border-slate-800">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             {/* Copyright */}
-            <p>
-              © {year}{" "}
-              <span className="text-gray-400 font-semibold">{siteConfig.displayName}</span>.
-              {" "}All rights reserved.
-            </p>
+            <div className="flex flex-col gap-1">
+              <p>
+                © {year}{" "}
+                <span className="text-gray-400 font-semibold">{siteConfig.displayName}</span>.
+                {" "}All rights reserved.
+              </p>
+              <p>
+                Thiết kế &amp; phát triển bởi{" "}
+                <a
+                  href="https://www.dhtech.io.vn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+                >
+                  DH TECH
+                </a>
+              </p>
+            </div>
 
             {/* Policy links */}
             <div className="flex items-center gap-4">
